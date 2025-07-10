@@ -1,0 +1,30 @@
+# Source files
+*.ts
+!*.d.ts
+
+# Build artifacts
+*.d.ts.map
+*.js.map
+
+# Development files
+test/
+test-d/
+.github/
+.vscode/
+.nyc_output/
+coverage/
+
+# Config files
+.eslintrc*
+.prettierrc*
+.editorconfig
+xo.config.js
+
+# Documentation
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+FUNDING.yml
+
+# CI/CD
+.github/
+.gitignore

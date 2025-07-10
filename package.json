@@ -66,12 +66,14 @@
         "url": "git+ssh://git@github.com/julienandreu/kioku.git"
     },
     "scripts": {
-        "build": "tsgo",
         "prebuild": "rm -rf dist",
+        "build": "tsgo",
+        "postbuild": "terser dist/index.js --compress --mangle --output dist/index.js",
         "prepack": "npm run build",
         "lint": "xo",
         "lint:fix": "xo --fix",
-        "test": "npm run lint && npm run build && tsd --typings dist/index.d.ts"
+        "pretest": "npm run lint && npm run build",
+        "test": "ava && tsd --typings dist/index.d.ts"
     },
     "sideEffects": false,
     "type": "module",
