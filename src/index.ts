@@ -33,7 +33,7 @@
  * ```
  */
 
-import {LRUCache} from 'lru-cache';
+import { LRUCache } from 'lru-cache';
 import mimicFunction from 'mimic-function';
 
 /**
@@ -62,8 +62,8 @@ type MemoizableFunction<T = unknown> = (...arguments_: any[]) => MemoizedResult<
  * @property {number} [ttl=300000] - Time to live for cache entries in milliseconds (5 minutes)
  */
 type CacheConfig = {
-	max?: number;
-	ttl?: number;
+    max?: number;
+    ttl?: number;
 };
 
 /**
@@ -73,8 +73,8 @@ type CacheConfig = {
  * @property {number} max - Maximum number of entries the cache can hold
  */
 type CacheStats = {
-	size: number;
-	max: number;
+    size: number;
+    max: number;
 };
 
 /**
@@ -88,8 +88,8 @@ const undefinedValue = Symbol('undefined');
  * Provides sensible defaults for most use cases.
  */
 const defaultOptions = {
-	max: 100,
-	ttl: 1000 * 60 * 5, // 5 minutes
+    max: 100,
+    ttl: 1000 * 60 * 5, // 5 minutes
 } as const;
 
 /**
@@ -114,7 +114,7 @@ let cache = new LRUCache<SerializedCacheKey, any>(defaultOptions);
  * ```
  */
 function marshallUndefined(value: unknown): unknown {
-	return value === undefined ? undefinedValue : value;
+    return value === undefined ? undefinedValue : value;
 }
 
 /**
@@ -132,7 +132,7 @@ function marshallUndefined(value: unknown): unknown {
  * ```
  */
 function unmarshallUndefined(value: unknown): unknown {
-	return value === undefinedValue ? undefined : value;
+    return value === undefinedValue ? undefined : value;
 }
 
 /**
@@ -149,7 +149,7 @@ function unmarshallUndefined(value: unknown): unknown {
  * ```
  */
 function isPromise(value: unknown): value is Promise<unknown> {
-	return value instanceof Promise;
+    return value instanceof Promise;
 }
 
 /**
@@ -167,11 +167,11 @@ function isPromise(value: unknown): value is Promise<unknown> {
  * ```
  */
 function isGenerator(value: unknown): value is Generator<unknown, unknown, unknown> {
-	return Boolean(value
-		&& typeof value === 'object'
-		&& 'next' in value
-		&& typeof (value as Generator).next === 'function'
-		&& !(Symbol.asyncIterator in value));
+    return Boolean(value
+        && typeof value === 'object'
+        && 'next' in value
+        && typeof (value as Generator).next === 'function'
+        && !(Symbol.asyncIterator in value));
 }
 
 /**
@@ -189,11 +189,11 @@ function isGenerator(value: unknown): value is Generator<unknown, unknown, unkno
  * ```
  */
 function isAsyncGenerator(value: unknown): value is AsyncGenerator<unknown, unknown, unknown> {
-	return Boolean(value
-		&& typeof value === 'object'
-		&& 'next' in value
-		&& typeof (value as AsyncGenerator).next === 'function'
-		&& Symbol.asyncIterator in value);
+    return Boolean(value
+        && typeof value === 'object'
+        && 'next' in value
+        && typeof (value as AsyncGenerator).next === 'function'
+        && Symbol.asyncIterator in value);
 }
 
 /**
@@ -218,34 +218,35 @@ const functionArgumentsKeyMap = new WeakMap<MemoizableFunction, Map<string, unkn
  * ```
  */
 function getArgumentsKey(arguments_: unknown[]): string {
-	// Use a stable string representation for primitive types, and unique object references for objects/symbols
-	return arguments_.map(argument => {
-		if (typeof argument === 'symbol') {
-			const key = Symbol.keyFor(argument);
-			return key === undefined ? `@@symbol:${argument.description ?? ''}:${argument.toString()}` : `@@symbol:${key}`;
-		}
+    // Use a stable string representation for primitive types, and unique object references for objects/symbols
+    return arguments_.map(argument => {
+        if (typeof argument === 'symbol') {
+            const key = Symbol.keyFor(argument);
+            return key === undefined ? `@@symbol:${argument.description ?? ''}:${argument.toString()}` : `@@symbol:${key}`;
+        }
 
-		if (typeof argument === 'function') {
-			return `@@function:${argument.name || 'anonymous'}`;
-		}
+        if (typeof argument === 'function') {
+            return `@@function:${argument.name || 'anonymous'}`;
+        }
 
-		if (argument === undefined) {
-			return '@@undefined';
-		}
+        if (argument === undefined) {
+            return '@@undefined';
+        }
 
-		if (argument === null) {
-			return '@@null';
-		}
+        if (argument === null) {
+            return '@@null';
+        }
 
-		if (typeof argument === 'object') {
-			// Use the object's reference as a unique identifier
-			// @ts-expect-error - we cannot serialize object identity, so just use a placeholder string.
-			return `@@object:${Object.prototype.toString.call(argument)}:${argument[Symbol.toStringTag] ?? ''}:${Object.prototype.toString.call(argument)}`;
-		}
+        if (typeof argument === 'object') {
+            // Use the object's reference as a unique identifier
+            const uniqueIdentifier = Symbol.toStringTag in argument ? argument[Symbol.toStringTag] : '';
 
-		// eslint-disable-next-line @typescript-eslint/no-base-to-string
-		return typeof argument === 'string' ? argument : String(argument);
-	}).join('|');
+            return `@@object:${Object.prototype.toString.call(argument)}:${uniqueIdentifier}:${Object.prototype.toString.call(argument)}`;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-base-to-string
+        return typeof argument === 'string' ? argument : String(argument);
+    }).join('|');
 }
 
 /**
@@ -264,22 +265,22 @@ function getArgumentsKey(arguments_: unknown[]): string {
  * ```
  */
 function createKey(function_: MemoizableFunction, arguments_: unknown[]): SerializedCacheKey {
-	let argumentsKeyMap = functionArgumentsKeyMap.get(function_);
-	if (!argumentsKeyMap) {
-		argumentsKeyMap = new Map();
-		functionArgumentsKeyMap.set(function_, argumentsKeyMap);
-	}
+    let argumentsKeyMap = functionArgumentsKeyMap.get(function_);
+    if (!argumentsKeyMap) {
+        argumentsKeyMap = new Map();
+        functionArgumentsKeyMap.set(function_, argumentsKeyMap);
+    }
 
-	const argumentsKey = getArgumentsKey(arguments_);
-	let cacheKey = argumentsKeyMap.get(argumentsKey);
+    const argumentsKey = getArgumentsKey(arguments_);
+    let cacheKey = argumentsKeyMap.get(argumentsKey);
 
-	if (!cacheKey) {
-		// Use a unique object as the cache key
-		cacheKey = {};
-		argumentsKeyMap.set(argumentsKey, cacheKey);
-	}
+    if (!cacheKey) {
+        // Use a unique object as the cache key
+        cacheKey = {};
+        argumentsKeyMap.set(argumentsKey, cacheKey);
+    }
 
-	return cacheKey as SerializedCacheKey;
+    return cacheKey as SerializedCacheKey;
 }
 
 /**
@@ -298,9 +299,9 @@ function createKey(function_: MemoizableFunction, arguments_: unknown[]): Serial
  * ```
  */
 function cacheSyncResult<T>(key: SerializedCacheKey, result: T): T {
-	const valueToCache = marshallUndefined(result);
-	cache.set(key, valueToCache);
-	return result;
+    const valueToCache = marshallUndefined(result);
+    cache.set(key, valueToCache);
+    return result;
 }
 
 /**
@@ -320,21 +321,21 @@ function cacheSyncResult<T>(key: SerializedCacheKey, result: T): T {
  * ```
  */
 async function cachePromiseResult<T>(key: SerializedCacheKey, promise: Promise<T>): Promise<T> {
-	const cachedPromise = (async () => {
-		try {
-			const resolvedValue = await promise;
-			const valueToCache = marshallUndefined(resolvedValue);
-			cache.set(key, valueToCache);
-			return resolvedValue;
-		} catch (error) {
-			cache.delete(key);
-			throw error;
-		}
-	})();
+    const cachedPromise = (async () => {
+        try {
+            const resolvedValue = await promise;
+            const valueToCache = marshallUndefined(resolvedValue);
+            cache.set(key, valueToCache);
+            return resolvedValue;
+        } catch (error) {
+            cache.delete(key);
+            throw error;
+        }
+    })();
 
-	cache.set(key, cachedPromise);
+    cache.set(key, cachedPromise);
 
-	return cachedPromise;
+    return cachedPromise;
 }
 
 /**
@@ -354,11 +355,11 @@ async function cachePromiseResult<T>(key: SerializedCacheKey, promise: Promise<T
  * ```
  */
 function cacheGeneratorResult<T>(
-	key: SerializedCacheKey,
-	generator: Generator<T, T, T>,
+    key: SerializedCacheKey,
+    generator: Generator<T, T, T>,
 ): Generator<T, T, T> {
-	cache.set(key, generator);
-	return generator;
+    cache.set(key, generator);
+    return generator;
 }
 
 /**
@@ -378,11 +379,11 @@ function cacheGeneratorResult<T>(
  * ```
  */
 function cacheAsyncGeneratorResult<T>(
-	key: SerializedCacheKey,
-	asyncGenerator: AsyncGenerator<T, T, T>,
+    key: SerializedCacheKey,
+    asyncGenerator: AsyncGenerator<T, T, T>,
 ): AsyncGenerator<T, T, T> {
-	cache.set(key, asyncGenerator);
-	return asyncGenerator;
+    cache.set(key, asyncGenerator);
+    return asyncGenerator;
 }
 
 /**
@@ -401,19 +402,19 @@ function cacheAsyncGeneratorResult<T>(
  * ```
  */
 export function setup(options: CacheConfig = defaultOptions): void {
-	const newCache = new LRUCache<SerializedCacheKey, any>({
-		...defaultOptions,
-		...options,
-	});
+    const newCache = new LRUCache<SerializedCacheKey, any>({
+        ...defaultOptions,
+        ...options,
+    });
 
-	// Migrate existing entries if cache is not empty
-	if (cache.size > 0) {
-		for (const [key, value] of cache.entries()) {
-			newCache.set(key, value);
-		}
-	}
+    // Migrate existing entries if cache is not empty
+    if (cache.size > 0) {
+        for (const [key, value] of cache.entries()) {
+            newCache.set(key, value);
+        }
+    }
 
-	cache = newCache;
+    cache = newCache;
 }
 
 /**
@@ -431,7 +432,7 @@ export function setup(options: CacheConfig = defaultOptions): void {
  * ```
  */
 export function clearCache(): void {
-	cache.clear();
+    cache.clear();
 }
 
 /**
@@ -452,10 +453,10 @@ export function clearCache(): void {
  * ```
  */
 export function getCacheStats(): CacheStats {
-	return {
-		size: cache.size,
-		max: cache.max,
-	};
+    return {
+        size: cache.size,
+        max: cache.max,
+    };
 }
 
 /**
@@ -511,31 +512,31 @@ export function getCacheStats(): CacheStats {
  * ```
  */
 export function memoize<T extends MemoizableFunction>(function_: T): T {
-	const memoizedFunction = ((...arguments_: unknown[]) => {
-		const key = createKey(function_, arguments_);
+    const memoizedFunction = ((...arguments_: unknown[]) => {
+        const key = createKey(function_, arguments_);
 
-		// Check if result is already cached
-		if (cache.has(key)) {
-			return unmarshallUndefined(cache.get(key));
-		}
+        // Check if result is already cached
+        if (cache.has(key)) {
+            return unmarshallUndefined(cache.get(key));
+        }
 
-		// Execute function and cache result based on type
-		const result = function_(...arguments_);
+        // Execute function and cache result based on type
+        const result = function_(...arguments_);
 
-		if (isPromise(result)) {
-			return cachePromiseResult(key, result);
-		}
+        if (isPromise(result)) {
+            return cachePromiseResult(key, result);
+        }
 
-		if (isGenerator(result)) {
-			return cacheGeneratorResult(key, result);
-		}
+        if (isGenerator(result)) {
+            return cacheGeneratorResult(key, result);
+        }
 
-		if (isAsyncGenerator(result)) {
-			return cacheAsyncGeneratorResult(key, result);
-		}
+        if (isAsyncGenerator(result)) {
+            return cacheAsyncGeneratorResult(key, result);
+        }
 
-		return cacheSyncResult(key, result);
-	}) as T;
+        return cacheSyncResult(key, result);
+    }) as T;
 
-	return mimicFunction(memoizedFunction, function_);
+    return mimicFunction(memoizedFunction, function_);
 }

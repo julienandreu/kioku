@@ -1,0 +1,10 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit",
+        "source.organizeImports": "explicit"
+    },
+    "editor.defaultFormatter": "samverschueren.linter-xo",
+    "editor.formatOnSave": true,
+    "typescript.experimental.useTsgo": true,
+    "typescript.tsdk": "node_modules/typescript/lib"
+}

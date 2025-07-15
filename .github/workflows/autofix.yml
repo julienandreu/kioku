@@ -1,0 +1,17 @@
+name: autofix.ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm i
+      - run: npm run lint:fix
+      - uses: autofix-ci/action@v1
