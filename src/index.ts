@@ -221,8 +221,7 @@ function getArgumentsKey(arguments_: unknown[]): string {
 	// Use a stable string representation for primitive types, and unique object references for objects/symbols
 	return arguments_.map(argument => {
 		if (typeof argument === 'symbol') {
-			const key = Symbol.keyFor(argument);
-			return key === undefined ? `@@symbol:${argument.description ?? ''}:${argument.toString()}` : `@@symbol:${key}`;
+			return `@@symbol:${argument.description ?? ''}:${argument.toString()}`;
 		}
 
 		if (typeof argument === 'function') {
@@ -239,8 +238,9 @@ function getArgumentsKey(arguments_: unknown[]): string {
 
 		if (typeof argument === 'object') {
 			// Use the object's reference as a unique identifier
-			// @ts-expect-error - we cannot serialize object identity, so just use a placeholder string.
-			return `@@object:${Object.prototype.toString.call(argument)}:${argument[Symbol.toStringTag] ?? ''}:${Object.prototype.toString.call(argument)}`;
+			const uniqueIdentifier = Symbol.toStringTag in argument ? String(argument[Symbol.toStringTag]) : '';
+
+			return `@@object:${Object.prototype.toString.call(argument)}:${uniqueIdentifier}:${Object.prototype.toString.call(argument)}`;
 		}
 
 		// eslint-disable-next-line @typescript-eslint/no-base-to-string

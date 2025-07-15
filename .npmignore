@@ -1,0 +1,35 @@
+# Source code (not needed in package)
+src/
+
+# Development files
+.github/
+.vscode/
+.editorconfig
+.gitattributes
+.nvmrc
+.npmrc
+
+# Test and coverage files
+coverage/
+*.test-d.ts
+test.ts
+
+# Build artifacts (handled by "files" in package.json, but explicit for clarity)
+dist/
+
+# Development dependencies and lock files
+node_modules/
+yarn.lock
+package-lock.json
+
+# Documentation (README and LICENSE are typically included by default)
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+FUNDING.yml
+
+# TypeScript configuration (not needed in package)
+tsconfig.json
+
+# Git files
+.git/
+.gitignore

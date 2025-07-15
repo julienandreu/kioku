@@ -1,50 +1,51 @@
 {
-	"compilerOptions": {
-		"allowJs": false,
-		"alwaysStrict": true,
-		"composite": true,
-		"declaration": true,
-		"declarationMap": true,
-		"downlevelIteration": true,
-		"esModuleInterop": true,
-		"exactOptionalPropertyTypes": true,
-		"forceConsistentCasingInFileNames": true,
-		"incremental": true,
-		"isolatedModules": true,
-		"jsx": "react",
-		"lib": [
-			"ESNext"
-		],
-		"module": "NodeNext",
-		"moduleDetection": "force",
-		"moduleResolution": "NodeNext",
-		"newLine": "lf",
-		"noEmitOnError": true,
-		"noFallthroughCasesInSwitch": true,
-		"noImplicitAny": true,
-		"noImplicitOverride": true,
-		"noImplicitReturns": true,
-		"noImplicitThis": true,
-		"noPropertyAccessFromIndexSignature": true,
-		"noUncheckedIndexedAccess": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"outDir": "${configDir}/dist",
-		"removeComments": false,
-		"resolveJsonModule": false,
-		"skipLibCheck": true,
-		"strict": true,
-		"strictBindCallApply": true,
-		"strictFunctionTypes": true,
-		"strictNullChecks": true,
-		"strictPropertyInitialization": true,
-		"target": "ESNext",
-		"useUnknownInCatchVariables": true
-	},
-	"files": [
-		"index.ts"
-	],
-	"ts-node": {
-		"transpileOnly": true
-	}
+    "compilerOptions": {
+        "allowJs": false,
+        "alwaysStrict": true,
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "downlevelIteration": true,
+        "esModuleInterop": true,
+        "exactOptionalPropertyTypes": true,
+        "forceConsistentCasingInFileNames": true,
+        "incremental": true,
+        "isolatedModules": true,
+        "jsx": "react",
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+        "types": [
+            "node"
+        ],
+        "module": "NodeNext",
+        "moduleDetection": "force",
+        "moduleResolution": "NodeNext",
+        "newLine": "lf",
+        "noEmitOnError": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noUncheckedIndexedAccess": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "outDir": "${configDir}/dist",
+        "removeComments": false,
+        "resolveJsonModule": false,
+        "skipLibCheck": true,
+        "strict": true,
+        "strictBindCallApply": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": true,
+        "target": "ESNext",
+        "useUnknownInCatchVariables": true
+    },
+    "files": [
+        "src/index.ts"
+    ]
 }
