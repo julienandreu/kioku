@@ -26,10 +26,10 @@
  * ```
  */
 
-import { expectTypeOf } from 'expect-type';
+import {expectTypeOf} from 'expect-type';
 import {
-    clearCache, getCacheStats,
-    memoize, setup,
+	clearCache, getCacheStats,
+	memoize, setup,
 } from './index.js';
 
 // ============================================================================
@@ -64,9 +64,9 @@ expectTypeOf<Promise<boolean>>(memoizedAsyncFunction('test'));
  * Validates that memoizing a generator function preserves its Generator type.
  * The memoized function should return a Generator with the same yield, return, and next types.
  */
-function* generatorFunction(text: string): Generator<boolean, boolean, boolean> {
-    yield Boolean(text);
-    return Boolean(text);
+function * generatorFunction(text: string): Generator<boolean, boolean, boolean> {
+	yield Boolean(text);
+	return Boolean(text);
 }
 
 const memoizedGeneratorFunction = memoize(generatorFunction);
@@ -79,9 +79,9 @@ expectTypeOf<Generator<boolean, boolean, boolean>>(memoizedGeneratorFunction('te
  * Validates that memoizing an async generator function preserves its AsyncGenerator type.
  * The memoized function should return an AsyncGenerator with the same yield, return, and next types.
  */
-async function* asyncGeneratorFunction(text: string): AsyncGenerator<boolean, boolean, boolean> {
-    yield Boolean(text);
-    return Boolean(text);
+async function * asyncGeneratorFunction(text: string): AsyncGenerator<boolean, boolean, boolean> {
+	yield Boolean(text);
+	return Boolean(text);
 }
 
 const memoizedAsyncGeneratorFunction = memoize(asyncGeneratorFunction);
@@ -101,7 +101,7 @@ expectTypeOf<AsyncGenerator<boolean, boolean, boolean>>(memoizedAsyncGeneratorFu
 function overloadedFunction(parameter: false): false;
 function overloadedFunction(parameter: true): true;
 function overloadedFunction(parameter: boolean): boolean {
-    return parameter;
+	return parameter;
 }
 
 const memoizedOverloadedFunction = memoize(overloadedFunction);
@@ -119,12 +119,12 @@ expectTypeOf<false>(memoizedOverloadedFunction(false));
  * Validates that memoizing a function with object parameters preserves the object type structure.
  * The memoized function should accept the same object shape and return the same type.
  */
-const objectFunction = (parameters: { name: string; age: number }): string =>
-    `${parameters.name} is ${parameters.age} years old`;
+const objectFunction = (parameters: {name: string; age: number}): string =>
+	`${parameters.name} is ${parameters.age} years old`;
 
 const memoizedObjectFunction = memoize(objectFunction);
 expectTypeOf<typeof objectFunction>(memoizedObjectFunction);
-expectTypeOf<string>(memoizedObjectFunction({ name: 'John', age: 30 }));
+expectTypeOf<string>(memoizedObjectFunction({name: 'John', age: 30}));
 
 /**
  * Test: Function with array parameters memoization
@@ -164,7 +164,7 @@ expectTypeOf<string>(memoizedUnionFunction(42));
  * The memoized function should have the same optional parameter signatures.
  */
 const optionalFunction = (required: string, optional?: number): string =>
-    optional ? `${required}-${optional}` : required;
+	optional ? `${required}-${optional}` : required;
 
 const memoizedOptionalFunction = memoize(optionalFunction);
 expectTypeOf<typeof optionalFunction>(memoizedOptionalFunction);
@@ -182,7 +182,7 @@ expectTypeOf<string>(memoizedOptionalFunction('test', 42));
  * The memoized function should accept the same rest parameter types.
  */
 const restFunction = (first: string, ...rest: number[]): string =>
-    `${first}-${rest.join('-')}`;
+	`${first}-${rest.join('-')}`;
 
 const memoizedRestFunction = memoize(restFunction);
 expectTypeOf<typeof restFunction>(memoizedRestFunction);
@@ -214,7 +214,7 @@ expectTypeOf<undefined>(memoizedUndefinedFunction());
  * Tests both with and without parameters to ensure proper type inference.
  */
 expectTypeOf<void>(setup());
-expectTypeOf<void>(setup({ max: 200, ttl: 60_000 }));
+expectTypeOf<void>(setup({max: 200, ttl: 60_000}));
 
 /**
  * Test: Clear cache function type validation
@@ -230,7 +230,7 @@ expectTypeOf<void>(clearCache());
  * with the expected properties and their types.
  */
 const stats = getCacheStats();
-expectTypeOf<{ size: number; max: number }>(stats);
+expectTypeOf<{size: number; max: number}>(stats);
 expectTypeOf<number>(stats.size);
 expectTypeOf<number>(stats.max);
 
@@ -245,11 +245,11 @@ expectTypeOf<number>(stats.max);
  * Tests that the memoized function preserves its type signature when used as a class property.
  */
 class Calculator {
-    private readonly memoizedAdd = memoize((a: number, b: number): number => a + b);
+	private readonly memoizedAdd = memoize((a: number, b: number): number => a + b);
 
-    add(a: number, b: number): number {
-        return this.memoizedAdd(a, b);
-    }
+	add(a: number, b: number): number {
+		return this.memoizedAdd(a, b);
+	}
 }
 
 const calculator = new Calculator();
@@ -262,7 +262,7 @@ expectTypeOf<number>(calculator.add(1, 2));
  * Tests that the generic type constraints are preserved in the memoized function.
  */
 function createMemoizedIdentity<T>(): (value: T) => T {
-    return memoize((value: T): T => value);
+	return memoize((value: T): T => value);
 }
 
 const stringIdentity = createMemoizedIdentity<string>();
@@ -295,7 +295,7 @@ expectTypeOf<string>(memoizedNoParametersFunction());
  * This tests the handling of void return types in the memoization system.
  */
 const voidFunction = (): void => {
-    // Do nothing
+	// Do nothing
 };
 
 const memoizedVoidFunction = memoize(voidFunction);
@@ -309,7 +309,7 @@ expectTypeOf<void>(memoizedVoidFunction());
  * This tests the handling of never return types, which represent functions that never return normally.
  */
 const neverFunction = (): never => {
-    throw new Error('This function never returns');
+	throw new Error('This function never returns');
 };
 
 const memoizedNeverFunction = memoize(neverFunction);

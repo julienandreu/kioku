@@ -73,10 +73,19 @@
         "prepack": "npm run build",
         "test": "npm run test:code && npm run test:types",
         "test:code": "tsx src/test.ts",
-        "test:types": "tsgo --project tsconfig.json --noEmit src/index.test-d.ts",
-        "test:coverage": "npm run build && c8 --reporter=text --reporter=html --reporter=lcov node --test dist/test.js"
+        "test:coverage": "c8 --reporter=text --reporter=lcov --all --include='src/index.ts' tsx src/test.ts",
+        "test:types": "tsgo --project tsconfig.test.json"
     },
     "sideEffects": false,
     "type": "module",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "xo": [
+        {
+            "files": "src/test.ts",
+            "rules": {
+                "@typescript-eslint/no-unsafe-assignment": "off",
+                "@typescript-eslint/no-unsafe-call": "off"
+            }
+        }
+    ]
 }

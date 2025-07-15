@@ -46,10 +46,6 @@
         "useUnknownInCatchVariables": true
     },
     "files": [
-        "src/index.ts",
-        "src/index.test-d.ts"
-    ],
-    "ts-node": {
-        "transpileOnly": true
-    }
+        "src/index.ts"
+    ]
 }
