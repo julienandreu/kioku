@@ -28,7 +28,8 @@
         "expect-type": "^1.2.2",
         "semantic-release": "^25.0.2",
         "tsx": "^4.20.3",
-        "xo": "^1.2.3"
+        "xo": "^1.2.3",
+        "eslint-plugin-unicorn": "^62.0.0"
     },
     "engines": {
         "node": ">=24.11.1"
@@ -78,12 +79,19 @@
         "test:coverage": "c8 --reporter=text --reporter=lcov --all --include='src/index.ts' tsx src/test.ts",
         "test:types": "tsgo --project tsconfig.test.json"
     },
+    "overrides": {
+        "eslint-plugin-unicorn": "^62.0.0",
+        "@eslint/plugin-kit": "^0.4.1"
+    },
     "sideEffects": false,
     "type": "module",
     "version": "1.0.1",
     "xo": [
         {
-            "files": ["src/test.ts", "src/index.test-d.ts"],
+            "files": [
+                "src/test.ts",
+                "src/index.test-d.ts"
+            ],
             "rules": {
                 "@typescript-eslint/no-unsafe-assignment": "off",
                 "@typescript-eslint/no-unsafe-call": "off",
@@ -111,6 +119,12 @@
             "files": "src/test.ts",
             "rules": {
                 "@typescript-eslint/await-thenable": "off"
+            }
+        },
+        {
+            "files": "src/index.ts",
+            "rules": {
+                "unicorn/no-immediate-mutation": "off"
             }
         }
     ]
