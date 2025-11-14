@@ -17,10 +17,7 @@
     "bugs": {
         "url": "https://github.com/julienandreu/kioku/issues"
     },
-    "dependencies": {
-        "lru-cache": "^11.1.0",
-        "mimic-function": "^5.0.1"
-    },
+    "dependencies": {},
     "description": "記憶 (ki-o-ku) = MEMORY in Japanese - Memoize functions and cache results",
     "devDependencies": {
         "@types/node": "^24.0.14",
