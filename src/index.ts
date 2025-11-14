@@ -304,6 +304,11 @@ function serializeArgument(value: unknown): string {
 		case 'object': {
 			return idForObject(value as Record<string, unknown>);
 		}
+
+		default: {
+			// This should never happen, but TypeScript requires exhaustive switch
+			return '?';
+		}
 	}
 }
 
