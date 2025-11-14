@@ -305,6 +305,7 @@ function serializeArgument(value: unknown): string {
 			return idForObject(value as Record<string, unknown>);
 		}
 
+		// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
 		default: {
 			// This should never happen, but TypeScript requires exhaustive switch
 			return '?';
