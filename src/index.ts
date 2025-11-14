@@ -354,7 +354,7 @@ function cacheAsyncGeneratorResult<Yield, Return, Next>(
 	return generator;
 }
 
-function copyFunctionMetadata<Func extends Function>(target: Func, source: Func): Func {
+function copyFunctionMetadata<Func extends (...args: any[]) => any>(target: Func, source: Func): Func {
 	for (const property of Reflect.ownKeys(source)) {
 		if (property === 'length' || property === 'name') {
 			continue;
@@ -403,8 +403,8 @@ export function getCacheStats(): CacheStats {
 }
 
 // Accept any function type - TypeScript will preserve the specific function signature
-// Using Function as base constraint allows generic functions and specific parameter types
-export function memoize<Func extends Function>(function_: Func): Func {
+// Using (...args: any[]) => any allows generic functions and works with Parameters/ReturnType
+export function memoize<Func extends (...args: any[]) => any>(function_: Func): Func {
 	// Cache function ID once per memoized function (Test 1 & 4 optimization)
 	const functionKey = idForFunction(function_ satisfies MemoizableFunction);
 
