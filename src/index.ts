@@ -168,6 +168,7 @@ class LruCache<K, V> {
 	}
 }
 
+// Accept any function type - TypeScript will preserve the specific function signature
 type MemoizableFunction = (...arguments_: readonly unknown[]) => unknown;
 
 let cache = new LruCache<string, CacheEntry>(defaultOptions);
@@ -190,31 +191,30 @@ function unmarshallUndefined<T>(value: T | typeof undefinedValue): T | undefined
 }
 
 function isPromise<Result>(value: unknown): value is Promise<Result> {
-	return (
-		typeof value === 'object'
-		&& value !== null
-		&& 'then' in value
-		&& typeof (value as {then?: unknown}).then === 'function'
-	);
+	if (typeof value !== 'object' || value === null || !('then' in value)) {
+		return false;
+	}
+
+	// Type narrowing: we know value is object with 'then', check if it's a function
+	return typeof (value as {then?: unknown}).then === 'function';
 }
 
 function isGenerator(value: unknown): value is Generator<unknown, unknown, unknown> {
-	return (
-		typeof value === 'object'
-		&& value !== null
-		&& Symbol.iterator in value
-		&& typeof (value as {next?: unknown}).next === 'function'
-		&& !(Symbol.asyncIterator in value)
-	);
+	if (typeof value !== 'object' || value === null || !(Symbol.iterator in value) || Symbol.asyncIterator in value) {
+		return false;
+	}
+
+	// Type narrowing: we know value is object with Symbol.iterator, check for next method
+	return 'next' in value && typeof (value as {next?: unknown}).next === 'function';
 }
 
 function isAsyncGenerator(value: unknown): value is AsyncGenerator<unknown, unknown, unknown> {
-	return (
-		typeof value === 'object'
-		&& value !== null
-		&& Symbol.asyncIterator in value
-		&& typeof (value as {next?: unknown}).next === 'function'
-	);
+	if (typeof value !== 'object' || value === null || !(Symbol.asyncIterator in value)) {
+		return false;
+	}
+
+	// Type narrowing: we know value is object with Symbol.asyncIterator, check for next method
+	return 'next' in value && typeof (value as {next?: unknown}).next === 'function';
 }
 
 function idForObject(value: Record<string, unknown>): string {
@@ -252,6 +252,7 @@ function idForSymbol(value: symbol): string {
 
 	const id = `symbol:${nextSymbolId++}:${value.description ?? ''}`;
 	symbolIds.set(value, id);
+
 	return id;
 }
 
@@ -298,11 +299,19 @@ function serializeArgument(value: unknown): string {
 		}
 
 		case 'function': {
+			// Type assertion needed: Function type doesn't match MemoizableFunction signature
 			return idForFunction(value as MemoizableFunction);
 		}
 
 		case 'object': {
-			return idForObject(value);
+			// Type assertion needed: object type doesn't have index signature, but we know it's Record<string, unknown>
+			return idForObject(value as Record<string, unknown>);
+		}
+
+		// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+		default: {
+			// This should never happen, but TypeScript requires exhaustive switch
+			return '?';
 		}
 	}
 }
@@ -345,7 +354,7 @@ function cacheAsyncGeneratorResult<Yield, Return, Next>(
 	return generator;
 }
 
-function copyFunctionMetadata<Func extends MemoizableFunction>(target: Func, source: Func): Func {
+function copyFunctionMetadata<Func extends (...args: any[]) => any>(target: Func, source: Func): Func {
 	for (const property of Reflect.ownKeys(source)) {
 		if (property === 'length' || property === 'name') {
 			continue;
@@ -393,9 +402,11 @@ export function getCacheStats(): CacheStats {
 	};
 }
 
-export function memoize<Func extends MemoizableFunction>(function_: Func): Func {
+// Accept any function type - TypeScript will preserve the specific function signature
+// Using (...args: any[]) => any allows generic functions and works with Parameters/ReturnType
+export function memoize<Func extends (...args: any[]) => any>(function_: Func): Func {
 	// Cache function ID once per memoized function (Test 1 & 4 optimization)
-	const functionKey = idForFunction(function_);
+	const functionKey = idForFunction(function_ satisfies MemoizableFunction);
 
 	const memoized = function (this: ThisParameterType<Func>, ...arguments_: Parameters<Func>): ReturnType<Func> {
 		// Optimize key creation for common cases (Test 1 optimization)
@@ -409,31 +420,40 @@ export function memoize<Func extends MemoizableFunction>(function_: Func): Func 
 		if (cached) {
 			switch (cached.kind) {
 				case 'value': {
+					// Type assertion needed: cache stores unknown, but we know it's ReturnType<Func>
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 					return unmarshallUndefined(cached.value) as ReturnType<Func>;
 				}
 
 				case 'promise':
 				case 'generator':
 				case 'async-generator': {
+					// Type assertion needed: cache stores unknown, but we know it's ReturnType<Func>
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 					return cached.value as ReturnType<Func>;
 				}
 			}
 		}
 
+		// Type assertion needed: function_.call returns unknown when called with unknown[] args
 		const result = function_.call(this, ...arguments_) as ReturnType<Func>;
 
 		if (isPromise(result)) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 			return cachePromiseResult(key, result) as ReturnType<Func>;
 		}
 
 		if (isAsyncGenerator(result)) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 			return cacheAsyncGeneratorResult(key, result) as ReturnType<Func>;
 		}
 
 		if (isGenerator(result)) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 			return cacheGeneratorResult(key, result) as ReturnType<Func>;
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		return cacheSyncResult(key, result);
 	} as Func;
 

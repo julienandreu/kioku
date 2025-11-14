@@ -44,8 +44,8 @@ import {
  */
 const syncFunction = Boolean;
 const memoizedSyncFunction = memoize(syncFunction);
-expectTypeOf<typeof syncFunction>(memoizedSyncFunction);
-expectTypeOf<boolean>(memoizedSyncFunction('test'));
+expectTypeOf(memoizedSyncFunction).toMatchTypeOf(syncFunction);
+expectTypeOf(memoizedSyncFunction('test')).toMatchTypeOf<boolean>();
 
 /**
  * Test: Async function memoization type preservation
@@ -54,9 +54,10 @@ expectTypeOf<boolean>(memoizedSyncFunction('test'));
  * The memoized function should return a Promise with the same resolved type.
  */
 const asyncFunction = async (text: string): Promise<boolean> => Boolean(text);
+
 const memoizedAsyncFunction = memoize(asyncFunction);
-expectTypeOf<typeof asyncFunction>(memoizedAsyncFunction);
-expectTypeOf<Promise<boolean>>(memoizedAsyncFunction('test'));
+expectTypeOf(memoizedAsyncFunction).toMatchTypeOf(asyncFunction);
+expectTypeOf(memoizedAsyncFunction('test')).toMatchTypeOf<Promise<boolean>>();
 
 /**
  * Test: Generator function memoization type preservation
@@ -70,8 +71,8 @@ function * generatorFunction(text: string): Generator<boolean, boolean, boolean>
 }
 
 const memoizedGeneratorFunction = memoize(generatorFunction);
-expectTypeOf<typeof generatorFunction>(memoizedGeneratorFunction);
-expectTypeOf<Generator<boolean, boolean, boolean>>(memoizedGeneratorFunction('test'));
+expectTypeOf(memoizedGeneratorFunction).toMatchTypeOf(generatorFunction);
+expectTypeOf(memoizedGeneratorFunction('test')).toMatchTypeOf<Generator<boolean, boolean, boolean>>();
 
 /**
  * Test: Async generator function memoization type preservation
@@ -85,8 +86,8 @@ async function * asyncGeneratorFunction(text: string): AsyncGenerator<boolean, b
 }
 
 const memoizedAsyncGeneratorFunction = memoize(asyncGeneratorFunction);
-expectTypeOf<typeof asyncGeneratorFunction>(memoizedAsyncGeneratorFunction);
-expectTypeOf<AsyncGenerator<boolean, boolean, boolean>>(memoizedAsyncGeneratorFunction('test'));
+expectTypeOf(memoizedAsyncGeneratorFunction).toMatchTypeOf(asyncGeneratorFunction);
+expectTypeOf(memoizedAsyncGeneratorFunction('test')).toMatchTypeOf<AsyncGenerator<boolean, boolean, boolean>>();
 
 // ============================================================================
 // OVERLOADED FUNCTION TESTS
@@ -105,9 +106,9 @@ function overloadedFunction(parameter: boolean): boolean {
 }
 
 const memoizedOverloadedFunction = memoize(overloadedFunction);
-expectTypeOf<typeof overloadedFunction>(memoizedOverloadedFunction);
-expectTypeOf<true>(memoizedOverloadedFunction(true));
-expectTypeOf<false>(memoizedOverloadedFunction(false));
+expectTypeOf(memoizedOverloadedFunction).toMatchTypeOf(overloadedFunction);
+expectTypeOf(memoizedOverloadedFunction(true)).toMatchTypeOf<true>();
+expectTypeOf(memoizedOverloadedFunction(false)).toMatchTypeOf<false>();
 
 // ============================================================================
 // FUNCTION WITH COMPLEX PARAMETERS
@@ -123,8 +124,8 @@ const objectFunction = (parameters: {name: string; age: number}): string =>
 	`${parameters.name} is ${parameters.age} years old`;
 
 const memoizedObjectFunction = memoize(objectFunction);
-expectTypeOf<typeof objectFunction>(memoizedObjectFunction);
-expectTypeOf<string>(memoizedObjectFunction({name: 'John', age: 30}));
+expectTypeOf(memoizedObjectFunction).toMatchTypeOf(objectFunction);
+expectTypeOf(memoizedObjectFunction({name: 'John', age: 30})).toMatchTypeOf<string>();
 
 /**
  * Test: Function with array parameters memoization
@@ -133,9 +134,10 @@ expectTypeOf<string>(memoizedObjectFunction({name: 'John', age: 30}));
  * The memoized function should accept the same array type and return the same type.
  */
 const arrayFunction = (items: readonly string[]): number => items.length;
+
 const memoizedArrayFunction = memoize(arrayFunction);
-expectTypeOf<typeof arrayFunction>(memoizedArrayFunction);
-expectTypeOf<number>(memoizedArrayFunction(['a', 'b', 'c']));
+expectTypeOf(memoizedArrayFunction).toMatchTypeOf(arrayFunction);
+expectTypeOf(memoizedArrayFunction(['a', 'b', 'c'])).toMatchTypeOf<number>();
 
 // ============================================================================
 // FUNCTION WITH UNION TYPES
@@ -167,9 +169,9 @@ const optionalFunction = (required: string, optional?: number): string =>
 	optional ? `${required}-${optional}` : required;
 
 const memoizedOptionalFunction = memoize(optionalFunction);
-expectTypeOf<typeof optionalFunction>(memoizedOptionalFunction);
-expectTypeOf<string>(memoizedOptionalFunction('test'));
-expectTypeOf<string>(memoizedOptionalFunction('test', 42));
+expectTypeOf(memoizedOptionalFunction).toMatchTypeOf(optionalFunction);
+expectTypeOf(memoizedOptionalFunction('test')).toMatchTypeOf<string>();
+expectTypeOf(memoizedOptionalFunction('test', 42)).toMatchTypeOf<string>();
 
 // ============================================================================
 // FUNCTION WITH REST PARAMETERS
@@ -185,8 +187,8 @@ const restFunction = (first: string, ...rest: number[]): string =>
 	`${first}-${rest.join('-')}`;
 
 const memoizedRestFunction = memoize(restFunction);
-expectTypeOf<typeof restFunction>(memoizedRestFunction);
-expectTypeOf<string>(memoizedRestFunction('test', 1, 2, 3));
+expectTypeOf(memoizedRestFunction).toMatchTypeOf(restFunction);
+expectTypeOf(memoizedRestFunction('test', 1, 2, 3)).toMatchTypeOf<string>();
 
 // ============================================================================
 // FUNCTION RETURNING UNDEFINED
