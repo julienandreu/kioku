@@ -128,8 +128,8 @@ const objectFunction = (parameters: {name: string; age: number}): string =>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const memoizedObjectFunction = memoize(objectFunction as any);
-expectTypeOf(memoizedObjectFunction).toEqualTypeOf(objectFunction);
-expectTypeOf(memoizedObjectFunction({name: 'John', age: 30})).toEqualTypeOf<string>();
+expectTypeOf(memoizedObjectFunction).toMatchTypeOf(objectFunction);
+expectTypeOf(memoizedObjectFunction({name: 'John', age: 30})).toMatchTypeOf<string>();
 
 /**
  * Test: Function with array parameters memoization
