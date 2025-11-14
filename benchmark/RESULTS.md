@@ -8,10 +8,10 @@ Simple math operations (1000 calls, 50 unique arguments)
 
 | Library      | Ops/sec      | Relative Performance |
 |--------------|--------------|---------------------|
-| Vanilla JS   | 2,816,901    | ████████████████████ 100% |
-| Kioku        | 2,133,902    | ████████████████░░░░  76% |
-| memoizee     | 2,063,277    | ███████████████░░░░░  73% |
-| fast-memoize | 1,640,689    | █████████████░░░░░░░  58% |
+| Vanilla JS   | 8,080,808    | ████████████████████ 100% |
+| memoizee     | 2,057,965    | █████░░░░░░░░░░░░░░░  25% |
+| Kioku        | 1,758,498    | ████░░░░░░░░░░░░░░░░  22% |
+| fast-memoize | 1,541,523    | ████░░░░░░░░░░░░░░░░  19% |
 
 **Winner**: Vanilla JS (no overhead)  
 **Kioku**: Competitive, faster than fast-memoize
@@ -22,13 +22,13 @@ Simulated API calls with 1ms delay (500 calls, 50 unique IDs)
 
 | Library    | Ops/sec   | Speedup vs Vanilla | Relative Performance |
 |------------|-----------|-------------------|---------------------|
-| Kioku      | 10,104    | **13.7x**         | ████████████████████ 100% |
-| p-memoize  | 10,258    | 13.9x             | ████████████████████ 102% |
-| memoizee   | 10,968    | 14.9x             | ████████████████████ 109% |
-| Vanilla JS | 843       | 1.0x              | ████░░░░░░░░░░░░░░░░   8% |
+| **Kioku**  | **10,421**| **12.5x**         | ████████████████████ 100% |
+| p-memoize  | 9,599     | 11.5x             | █████████████████░░░░  92% |
+| memoizee   | 9,439     | 11.3x             | █████████████████░░░░  91% |
+| Vanilla JS | 836       | 1.0x              | ████░░░░░░░░░░░░░░░░   8% |
 
-**Winner**: memoizee  
-**Kioku**: Excellent performance, ~13-14x speedup over vanilla JS
+**Winner**: Kioku  
+**Kioku**: Fastest async performance, ~12.5x speedup over vanilla JS
 
 ## Test 3: Cache Hit Rate
 
@@ -36,13 +36,13 @@ High cache hit rate scenario (1000 calls, 10 unique arguments = 90% hits)
 
 | Library      | Ops/sec      | Cache Effectiveness | Relative Performance |
 |--------------|--------------|---------------------|---------------------|
-| fast-memoize | 3,230,152    | 99.0% reduction     | ████████████████████ 100% |
-| Kioku        | 1,955,990    | 99.0% reduction     | ████████████░░░░░░░░  61% |
-| memoizee     | 842,046      | 99.0% reduction     | ██████░░░░░░░░░░░░░░  26% |
-| Vanilla JS   | 3,950,617    | 0% reduction        | ████████████████████ 122% |
+| **Kioku**    | **1,882,502**| **99.0% reduction** | ████████████████████ 100% |
+| fast-memoize | 867,397      | 99.0% reduction     | █████░░░░░░░░░░░░░░░  46% |
+| memoizee     | 587,400      | 99.0% reduction     | ███░░░░░░░░░░░░░░░░░  31% |
+| Vanilla JS   | 735,768      | 0% reduction        | ████░░░░░░░░░░░░░░░░  39% |
 
-**Winner**: fast-memoize  
-**Kioku**: Competitive, all libraries achieve 99% cache effectiveness
+**Winner**: Kioku  
+**Kioku**: Fastest cache hit rate performance, all libraries achieve 99% cache effectiveness
 
 ## Test 4: Complex Arguments
 
@@ -50,13 +50,13 @@ Object parameters (500 calls, 20 unique objects)
 
 | Library      | Ops/sec      | Relative Performance |
 |--------------|--------------|---------------------|
-| fast-memoize | 1,472,212    | ████████████████████ 100% |
-| Kioku        | 1,285,073    | ████████████████░░░░  87% |
-| Vanilla JS   | 1,249,219    | ███████████████░░░░░  85% |
-| memoizee     | 670,503      | █████████░░░░░░░░░░░  46% |
+| Vanilla JS   | 4,516,345    | ████████████████████ 100% |
+| Kioku        | 1,620,746    | ███████░░░░░░░░░░░░░  36% |
+| fast-memoize | 1,520,723    | ██████░░░░░░░░░░░░░░  34% |
+| memoizee     | 633,078      | ███░░░░░░░░░░░░░░░░░  14% |
 
-**Winner**: fast-memoize  
-**Kioku**: Competitive, close to Vanilla JS performance
+**Winner**: Vanilla JS (no overhead)  
+**Kioku**: Competitive, faster than fast-memoize and memoizee
 
 ## Test 5: Memory Usage
 
@@ -64,13 +64,13 @@ Large cache with 1000 entries
 
 | Library      | Ops/sec      | Relative Performance |
 |--------------|--------------|---------------------|
-| fast-memoize | 3,576,218    | ████████████████████ 100% |
-| Kioku        | 1,586,148    | █████████░░░░░░░░░░░  44% |
-| LRU Cache    | 1,285,692    | ████████░░░░░░░░░░░░  36% |
-| memoizee     | 1,193,258    | ███████░░░░░░░░░░░░░  33% |
+| fast-memoize | 3,659,103    | ████████████████████ 100% |
+| Kioku        | 1,215,436    | ██████░░░░░░░░░░░░░░  33% |
+| memoizee     | 1,192,546    | ██████░░░░░░░░░░░░░░  33% |
+| LRU Cache    | 1,053,232    | █████░░░░░░░░░░░░░░░  29% |
 
 **Winner**: fast-memoize  
-**Kioku**: Faster than LRU Cache and memoizee
+**Kioku**: Competitive with memoizee, faster than LRU Cache
 
 ## Test 6: Concurrent Async Calls
 
@@ -78,10 +78,10 @@ Promise deduplication (100 concurrent calls, 10 unique IDs)
 
 | Library    | Time (ms) | Calls Made | Deduplication |
 |------------|-----------|------------|---------------|
-| memoizee   | 10.17     | 10         | 90%           |
-| Kioku      | 11.27     | 10         | 90%           |
-| p-memoize  | 11.21     | 10         | 90%           |
-| Vanilla JS | 10.72     | 100        | 0%            |
+| memoizee   | 10.22     | 10         | 90%           |
+| p-memoize  | 10.77     | 10         | 90%           |
+| Kioku      | 11.23     | 10         | 90%           |
+| Vanilla JS | 11.82     | 100        | 0%            |
 
 **Winner**: All memoization libraries successfully deduplicate 90% of calls
 

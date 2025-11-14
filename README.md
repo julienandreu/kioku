@@ -206,27 +206,27 @@ Kioku has been optimized for performance and compared against other popular memo
 
 | Library      | Ops/sec      | Relative Performance |
 |--------------|--------------|---------------------|
-| Vanilla JS   | 2,816,901    | ████████████████████ 100% |
-| **Kioku**    | **2,133,902**| ████████████████░░░░  76% |
-| memoizee     | 2,063,277    | ███████████████░░░░░  73% |
-| fast-memoize | 1,640,689    | █████████████░░░░░░░  58% |
+| Vanilla JS   | 8,080,808    | █████████████████████ 100% |
+| memoizee     | 2,057,965    | █████░░░░░░░░░░░░░░░░  25% |
+| **Kioku**    | **1,758,498**| ████░░░░░░░░░░░░░░░░░  22% |
+| fast-memoize | 1,541,523    | ████░░░░░░░░░░░░░░░░░  19% |
 
 ### Async Function Performance
 
 | Library      | Ops/sec   | Speedup vs Vanilla | Relative Performance |
 |--------------|-----------|-------------------|---------------------|
-| memoizee     | 10,968    | 14.9x             | ████████████████████ 109% |
-| p-memoize    | 10,258    | 13.9x             | ████████████████████ 102% |
-| **Kioku**    | **10,104**| **13.7x**         | ████████████████████ 100% |
-| Vanilla JS   | 843       | 1.0x              | ████░░░░░░░░░░░░░░░░   8% |
+| **Kioku**    | **10,421**| **12.5x**         | █████████████████████ 100% |
+| p-memoize    | 9,599     | 11.5x             | █████████████████░░░░  92% |
+| memoizee     | 9,439     | 11.3x             | █████████████████░░░░  91% |
+| Vanilla JS   | 836       | 1.0x              | ████░░░░░░░░░░░░░░░░░   8% |
 
 ### Cache Hit Rate (90% hits)
 
 | Library      | Ops/sec      | Cache Effectiveness |
 |--------------|--------------|---------------------|
-| fast-memoize | 3,230,152    | 99.0% reduction     |
-| **Kioku**    | **1,955,990**| **99.0% reduction** |
-| memoizee     | 842,046      | 99.0% reduction     |
+| **Kioku**    | **1,882,502**| **99.0% reduction** |
+| fast-memoize | 867,397      | 99.0% reduction     |
+| memoizee     | 587,400      | 99.0% reduction     |
 
 ### Key Highlights
 
