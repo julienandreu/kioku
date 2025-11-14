@@ -182,7 +182,7 @@ const symbolIds = new Map<symbol, string>();
 let nextSymbolId = 0;
 
 function marshallUndefined<T>(value: T): T | typeof undefinedValue {
-	return value === undefined ? undefinedValue : value;
+	return value ?? undefinedValue;
 }
 
 function unmarshallUndefined<T>(value: T | typeof undefinedValue): T | undefined {
@@ -304,10 +304,6 @@ function serializeArgument(value: unknown): string {
 		case 'object': {
 			return idForObject(value);
 		}
-
-		default: {
-			return '?';
-		}
 	}
 }
 
@@ -318,11 +314,15 @@ function cacheSyncResult<Result>(key: string, result: Result): Result {
 
 async function cachePromiseResult<Result>(key: string, promise: Promise<Result>): Promise<Result> {
 	// Optimize: Cache the promise immediately for concurrent call deduplication (Test 2 & 6 optimization)
-	// Wrap in catch to handle rejections
-	const wrapped = promise.catch(error => {
-		cache.delete(key);
-		throw error;
-	});
+	// Wrap in async IIFE to handle rejections without using .catch()
+	const wrapped = (async () => {
+		try {
+			return await promise;
+		} catch (error: unknown) {
+			cache.delete(key);
+			throw error;
+		}
+	})();
 
 	// Set cache before returning to ensure concurrent calls see the same promise
 	cache.set(key, {kind: 'promise', value: wrapped});
@@ -401,7 +401,7 @@ export function memoize<Func extends MemoizableFunction>(function_: Func): Func 
 		// Optimize key creation for common cases (Test 1 optimization)
 		const key = arguments_.length === 0
 			? functionKey
-			: `${functionKey}|${arguments_.map(serializeArgument).join('|')}`;
+			: `${functionKey}|${arguments_.map(arg => serializeArgument(arg)).join('|')}`;
 
 		// Optimize: Check cache before execution (Test 6 optimization)
 		const cached = cache.get(key);
