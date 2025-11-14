@@ -403,7 +403,8 @@ export function getCacheStats(): CacheStats {
 }
 
 // Accept any function type - TypeScript will preserve the specific function signature
-export function memoize<Func extends (...args: readonly unknown[]) => unknown>(function_: Func): Func {
+// Using Function as base constraint allows generic functions and specific parameter types
+export function memoize<Func extends Function>(function_: Func): Func {
 	// Cache function ID once per memoized function (Test 1 & 4 optimization)
 	const functionKey = idForFunction(function_ satisfies MemoizableFunction);
 
