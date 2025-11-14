@@ -302,7 +302,11 @@ function serializeArgument(value: unknown): string {
 		}
 
 		case 'object': {
-			return idForObject(value);
+			return idForObject(value as Record<string, unknown>);
+		}
+
+		default: {
+			return '?';
 		}
 	}
 }
