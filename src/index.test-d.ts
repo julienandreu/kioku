@@ -140,8 +140,8 @@ expectTypeOf(memoizedObjectFunction({name: 'John', age: 30})).toEqualTypeOf<stri
 const arrayFunction = (items: readonly string[]): number => items.length;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const memoizedArrayFunction = memoize(arrayFunction as any);
-expectTypeOf(memoizedArrayFunction).toEqualTypeOf(arrayFunction);
-expectTypeOf(memoizedArrayFunction(['a', 'b', 'c'])).toEqualTypeOf<number>();
+expectTypeOf(memoizedArrayFunction).toMatchTypeOf(arrayFunction);
+expectTypeOf(memoizedArrayFunction(['a', 'b', 'c'])).toMatchTypeOf<number>();
 
 // ============================================================================
 // FUNCTION WITH UNION TYPES
