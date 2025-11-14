@@ -451,5 +451,5 @@ export function memoize<Func extends Function>(function_: Func): Func {
 		return cacheSyncResult(key, result);
 	} as Func;
 
-	return copyFunctionMetadata(memoized, function_);
+	return copyFunctionMetadata(memoized, function_) as Func;
 }
