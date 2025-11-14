@@ -206,34 +206,36 @@ Kioku has been optimized for performance and compared against other popular memo
 
 | Library      | Ops/sec      | Relative Performance |
 |--------------|--------------|---------------------|
-| Vanilla JS   | 8,080,808    | █████████████████████ 100% |
-| memoizee     | 2,057,965    | █████░░░░░░░░░░░░░░░░  25% |
-| **Kioku**    | **1,758,498**| ████░░░░░░░░░░░░░░░░░  22% |
-| fast-memoize | 1,541,523    | ████░░░░░░░░░░░░░░░░░  19% |
+| Vanilla JS   | 8,852,847.96 | ████████████████████ 100% |
+| **Kioku**    | **2,064,162.42**| ██████░░░░░░░░░░░░░░ 23% |
+| memoizee     | 2,046,211.64 | ██████░░░░░░░░░░░░░░ 23% |
+| fast-memoize | 1,439,971.89 | ████░░░░░░░░░░░░░░░░ 16% |
 
 ### Async Function Performance
 
 | Library      | Ops/sec   | Speedup vs Vanilla | Relative Performance |
 |--------------|-----------|-------------------|---------------------|
-| **Kioku**    | **10,421**| **12.5x**         | █████████████████████ 100% |
-| p-memoize    | 9,599     | 11.5x             | █████████████████░░░░  92% |
-| memoizee     | 9,439     | 11.3x             | █████████████████░░░░  91% |
-| Vanilla JS   | 836       | 1.0x              | ████░░░░░░░░░░░░░░░░░   8% |
+| memoizee     | 10,656.51 | 12.4x             | ████████████████████ 100% |
+| p-memoize    | 9,782.79  | 11.4x             | █████████████████░░░  92% |
+| **Kioku**    | **8,081.35**| **9.4x**         | ██████████████░░░░░░  76% |
+| Vanilla JS   | 859.26    | 1.0x              | ███░░░░░░░░░░░░░░░░░   8% |
 
 ### Cache Hit Rate (90% hits)
 
 | Library      | Ops/sec      | Cache Effectiveness |
 |--------------|--------------|---------------------|
-| **Kioku**    | **1,882,502**| **99.0% reduction** |
-| fast-memoize | 867,397      | 99.0% reduction     |
-| memoizee     | 587,400      | 99.0% reduction     |
+| Vanilla JS   | 3,306,703.35 | 0% reduction        |
+| fast-memoize | 2,828,518.25 | 99.0% reduction     |
+| **Kioku**    | **1,587,616.59**| **99.0% reduction** |
+| memoizee     | 624,089.61  | 99.0% reduction     |
 
 ### Key Highlights
 
-- ⚡ **Async operations**: ~13-14x speedup over vanilla JS
+- ⚡ **Async operations**: ~9.4x speedup over vanilla JS, competitive with leading libraries
 - 🎯 **Cache effectiveness**: 99% reduction in function calls
 - 💾 **Memory efficient**: Built-in LRU eviction with TTL support
 - 🔄 **Concurrent deduplication**: Excellent promise deduplication (90% reduction)
+- 🚀 **Complex arguments**: Strong performance with objects and arrays (37% of vanilla)
 
 See [benchmark/RESULTS.md](./benchmark/RESULTS.md) for detailed results.
 
