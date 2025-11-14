@@ -194,8 +194,8 @@ function isPromise<Result>(value: unknown): value is Promise<Result> {
 		return false;
 	}
 
-	const valueWithThen = value satisfies {then?: unknown};
-	return typeof valueWithThen.then === 'function';
+	// Type narrowing: we know value is object with 'then', check if it's a function
+	return typeof (value as {then?: unknown}).then === 'function';
 }
 
 function isGenerator(value: unknown): value is Generator<unknown, unknown, unknown> {
@@ -203,8 +203,8 @@ function isGenerator(value: unknown): value is Generator<unknown, unknown, unkno
 		return false;
 	}
 
-	const valueWithNext = value satisfies {next?: unknown};
-	return typeof valueWithNext.next === 'function';
+	// Type narrowing: we know value is object with Symbol.iterator, check for next method
+	return 'next' in value && typeof (value as {next?: unknown}).next === 'function';
 }
 
 function isAsyncGenerator(value: unknown): value is AsyncGenerator<unknown, unknown, unknown> {
@@ -212,8 +212,8 @@ function isAsyncGenerator(value: unknown): value is AsyncGenerator<unknown, unkn
 		return false;
 	}
 
-	const valueWithNext = value satisfies {next?: unknown};
-	return typeof valueWithNext.next === 'function';
+	// Type narrowing: we know value is object with Symbol.asyncIterator, check for next method
+	return 'next' in value && typeof (value as {next?: unknown}).next === 'function';
 }
 
 function idForObject(value: Record<string, unknown>): string {
