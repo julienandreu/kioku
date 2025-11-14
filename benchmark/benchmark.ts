@@ -14,18 +14,18 @@ import {
 	setup,
 } from '../src/index.js';
 
-interface BenchmarkResult {
+type BenchmarkResult = {
 	name: string;
 	time: number;
 	opsPerSec: number;
 	memoryDelta?: number;
-}
+};
 
-function formatNumber(num: number): string {
+function formatNumber(number_: number): string {
 	return new Intl.NumberFormat('en-US', {
 		minimumFractionDigits: 2,
 		maximumFractionDigits: 2,
-	}).format(num);
+	}).format(number_);
 }
 
 function formatBytes(bytes: number): string {
@@ -36,7 +36,7 @@ function formatBytes(bytes: number): string {
 	const k = 1024;
 	const sizes = ['B', 'KB', 'MB', 'GB'];
 	const i = Math.floor(Math.log(bytes) / Math.log(k));
-	return `${formatNumber(bytes / Math.pow(k, i))} ${sizes[i]}`;
+	return `${formatNumber(bytes / k ** i)} ${sizes[i]}`;
 }
 
 async function benchmark<T extends readonly unknown[]>(
@@ -49,8 +49,8 @@ async function benchmark<T extends readonly unknown[]>(
 		await fn(...args[i % args.length]!);
 	}
 
-	if (global.gc) {
-		global.gc();
+	if (globalThis.gc) {
+		globalThis.gc();
 	}
 
 	const memBefore = process.memoryUsage().heapUsed;
@@ -67,7 +67,9 @@ async function benchmark<T extends readonly unknown[]>(
 	const opsPerSec = (args.length / time) * 1000;
 	const memoryDelta = memAfter > memBefore ? memAfter - memBefore : undefined;
 
-	return {name, time, opsPerSec, memoryDelta};
+	return {
+		name, time, opsPerSec, memoryDelta,
+	};
 }
 
 function printResults(results: BenchmarkResult[]): void {
@@ -79,16 +81,15 @@ function printResults(results: BenchmarkResult[]): void {
 	for (const result of results) {
 		const time = formatNumber(result.time);
 		const ops = formatNumber(result.opsPerSec);
-		const mem = result.memoryDelta !== undefined ? formatBytes(result.memoryDelta) : 'N/A';
+		const mem = result.memoryDelta === undefined ? 'N/A' : formatBytes(result.memoryDelta);
 		const name = result.name.padEnd(19);
 		console.log(`│ ${name} │ ${time.padStart(12)} │ ${ops.padStart(12)} │ ${mem.padStart(12)} │`);
 	}
 
 	console.log('└─────────────────────┴──────────────┴──────────────┴──────────────┘');
 
-	const fastest = results.reduce((prev, current) =>
-		current.opsPerSec > prev.opsPerSec ? current : prev,
-	);
+	const fastest = results.reduce((previous, current) =>
+		current.opsPerSec > previous.opsPerSec ? current : previous);
 	console.log(`\n🏆 Fastest: ${fastest.name} (${formatNumber(fastest.opsPerSec)} ops/sec)`);
 }
 
@@ -96,7 +97,7 @@ async function testSyncSimple(): Promise<void> {
 	console.log('\n🧮 Test 1: Synchronous Function - Simple Math');
 	console.log('─────────────────────────────────────────────────');
 
-	const expensiveFn = (a: number, b: number): number => Math.sqrt(a * a + b * b);
+	const expensiveFn = (a: number, b: number): number => Math.hypot(a, b);
 	const args = Array.from({length: 1000}, (_, i) => [i % 50, (i * 2) % 50] as [number, number]);
 
 	const results: BenchmarkResult[] = [];
@@ -147,7 +148,7 @@ async function testCacheHitRate(): Promise<void> {
 	};
 
 	const uniqueArgs = Array.from({length: 10}, (_, i) => [i] as [number]);
-	const args = Array.from({length: 1000}, (_, i) => [uniqueArgs[i % uniqueArgs.length]![0]!] as [number]);
+	const args = Array.from({length: 1000}, (_, i) => [uniqueArgs[i % uniqueArgs.length]![0]] as [number]);
 
 	const results: BenchmarkResult[] = [];
 
@@ -230,10 +231,12 @@ async function testMemoryUsage(): Promise<void> {
 		if (cached !== undefined) {
 			return cached;
 		}
+
 		const result = compute(x);
 		lruCache.set(key, result);
 		return result;
 	};
+
 	results.push(await benchmark('LRU Cache', lruFn, args));
 	results.push(await benchmark('fast-memoize', fastMemoize(compute), args));
 	results.push(await benchmark('memoizee', memoizee(compute, {max: 1000}), args));
@@ -260,7 +263,7 @@ async function testConcurrentAsync(): Promise<void> {
 	): Promise<{name: string; time: number; calls: number}> => {
 		callCount = 0;
 		const start = performance.now();
-		const promises = Array.from({length: 100}, (_, i) => fn(`id-${i % 10}`));
+		const promises = Array.from({length: 100}, async (_, i) => fn(`id-${i % 10}`));
 		await Promise.all(promises);
 		return {name, time: performance.now() - start, calls: callCount};
 	};
