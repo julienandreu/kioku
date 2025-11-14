@@ -1,6 +1,10 @@
 # Kioku Performance Benchmarks
 
-This directory contains performance benchmarks comparing Kioku with other popular memoization libraries.
+Performance comparison of Kioku against other popular memoization libraries.
+
+## Results
+
+See [RESULTS.md](./RESULTS.md) for detailed benchmark results with visual charts.
 
 ## Running Benchmarks
 
@@ -10,15 +14,6 @@ npm install
 npm run benchmark
 ```
 
-## Benchmark Tests
-
-1. **Synchronous Function** - Simple math operations
-2. **Async Function** - Simulated API calls with network delays
-3. **Cache Hit Rate** - High cache hit rate scenario (90% hits)
-4. **Complex Arguments** - Object and array parameters
-5. **Memory Usage** - Large cache with 1000 entries
-6. **Concurrent Async Calls** - Promise deduplication under concurrent load
-
 ## Libraries Compared
 
 - **Kioku** - This library
@@ -27,7 +22,12 @@ npm run benchmark
 - **fast-memoize** - [caiogondim/fast-memoize.js](https://github.com/caiogondim/fast-memoize.js)
 - **LRU Cache** - Manual LRU cache implementation
 
-## Results
+## Test Scenarios
 
-See [SUMMARY.md](./SUMMARY.md) for detailed performance analysis and optimization results.
+1. **Synchronous Function** - Simple math operations
+2. **Async Function** - Simulated API calls with network delays
+3. **Cache Hit Rate** - High cache hit rate scenario (90% hits)
+4. **Complex Arguments** - Object and array parameters
+5. **Memory Usage** - Large cache with 1000 entries
+6. **Concurrent Async Calls** - Promise deduplication under concurrent load
 

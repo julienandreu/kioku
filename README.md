@@ -200,20 +200,42 @@ Kioku works in all modern browsers that support:
 
 ## Performance Benchmarks
 
-Kioku has been optimized for performance and compared against other popular memoization libraries. See the [benchmark directory](./benchmark/) for detailed performance tests and results.
+Kioku has been optimized for performance and compared against other popular memoization libraries ([p-memoize](https://github.com/sindresorhus/p-memoize), [memoizee](https://github.com/medikoo/memoizee), [fast-memoize](https://github.com/caiogondim/fast-memoize.js)).
 
-Quick summary:
-- **Synchronous operations**: Competitive with memoizee, faster than fast-memoize
-- **Async operations**: ~13-14x speedup over vanilla JS
-- **Cache effectiveness**: 99% reduction in function calls for high hit-rate scenarios
-- **Memory usage**: Efficient memory footprint with built-in LRU eviction
+### Synchronous Function Performance
 
-Run benchmarks:
-```bash
-cd benchmark
-npm install
-npm run benchmark
-```
+| Library      | Ops/sec      | Relative Performance |
+|--------------|--------------|---------------------|
+| Vanilla JS   | 2,816,901    | ████████████████████ 100% |
+| **Kioku**    | **2,133,902**| ████████████████░░░░  76% |
+| memoizee     | 2,063,277    | ███████████████░░░░░  73% |
+| fast-memoize | 1,640,689    | █████████████░░░░░░░  58% |
+
+### Async Function Performance
+
+| Library      | Ops/sec   | Speedup vs Vanilla | Relative Performance |
+|--------------|-----------|-------------------|---------------------|
+| memoizee     | 10,968    | 14.9x             | ████████████████████ 109% |
+| p-memoize    | 10,258    | 13.9x             | ████████████████████ 102% |
+| **Kioku**    | **10,104**| **13.7x**         | ████████████████████ 100% |
+| Vanilla JS   | 843       | 1.0x              | ████░░░░░░░░░░░░░░░░   8% |
+
+### Cache Hit Rate (90% hits)
+
+| Library      | Ops/sec      | Cache Effectiveness |
+|--------------|--------------|---------------------|
+| fast-memoize | 3,230,152    | 99.0% reduction     |
+| **Kioku**    | **1,955,990**| **99.0% reduction** |
+| memoizee     | 842,046      | 99.0% reduction     |
+
+### Key Highlights
+
+- ⚡ **Async operations**: ~13-14x speedup over vanilla JS
+- 🎯 **Cache effectiveness**: 99% reduction in function calls
+- 💾 **Memory efficient**: Built-in LRU eviction with TTL support
+- 🔄 **Concurrent deduplication**: Excellent promise deduplication (90% reduction)
+
+See [benchmark/RESULTS.md](./benchmark/RESULTS.md) for detailed results.
 
 ## Contributing
 
