@@ -190,31 +190,30 @@ function unmarshallUndefined<T>(value: T | typeof undefinedValue): T | undefined
 }
 
 function isPromise<Result>(value: unknown): value is Promise<Result> {
-	return (
-		typeof value === 'object'
-		&& value !== null
-		&& 'then' in value
-		&& typeof (value as {then?: unknown}).then === 'function'
-	);
+	if (typeof value !== 'object' || value === null || !('then' in value)) {
+		return false;
+	}
+
+	const valueWithThen = value satisfies {then?: unknown};
+	return typeof valueWithThen.then === 'function';
 }
 
 function isGenerator(value: unknown): value is Generator<unknown, unknown, unknown> {
-	return (
-		typeof value === 'object'
-		&& value !== null
-		&& Symbol.iterator in value
-		&& typeof (value as {next?: unknown}).next === 'function'
-		&& !(Symbol.asyncIterator in value)
-	);
+	if (typeof value !== 'object' || value === null || !(Symbol.iterator in value) || Symbol.asyncIterator in value) {
+		return false;
+	}
+
+	const valueWithNext = value satisfies {next?: unknown};
+	return typeof valueWithNext.next === 'function';
 }
 
 function isAsyncGenerator(value: unknown): value is AsyncGenerator<unknown, unknown, unknown> {
-	return (
-		typeof value === 'object'
-		&& value !== null
-		&& Symbol.asyncIterator in value
-		&& typeof (value as {next?: unknown}).next === 'function'
-	);
+	if (typeof value !== 'object' || value === null || !(Symbol.asyncIterator in value)) {
+		return false;
+	}
+
+	const valueWithNext = value satisfies {next?: unknown};
+	return typeof valueWithNext.next === 'function';
 }
 
 function idForObject(value: Record<string, unknown>): string {
@@ -299,11 +298,11 @@ function serializeArgument(value: unknown): string {
 		}
 
 		case 'function': {
-			return idForFunction(value as MemoizableFunction);
+			return idForFunction(value satisfies MemoizableFunction);
 		}
 
 		case 'object': {
-			return idForObject(value as Record<string, unknown>);
+			return idForObject(value satisfies Record<string, unknown>);
 		}
 
 		// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
@@ -416,18 +415,21 @@ export function memoize<Func extends MemoizableFunction>(function_: Func): Func 
 		if (cached) {
 			switch (cached.kind) {
 				case 'value': {
+					// Type assertion needed: cache stores unknown, but we know it's ReturnType<Func>
 					return unmarshallUndefined(cached.value) as ReturnType<Func>;
 				}
 
 				case 'promise':
 				case 'generator':
 				case 'async-generator': {
+					// Type assertion needed: cache stores unknown, but we know it's ReturnType<Func>
 					return cached.value as ReturnType<Func>;
 				}
 			}
 		}
 
-		const result = function_.call(this, ...arguments_) as ReturnType<Func>;
+		// Type inference: function_.call returns ReturnType<Func>
+		const result: ReturnType<Func> = function_.call(this, ...arguments_);
 
 		if (isPromise(result)) {
 			return cachePromiseResult(key, result) as ReturnType<Func>;

@@ -44,8 +44,8 @@ import {
  */
 const syncFunction = Boolean;
 const memoizedSyncFunction = memoize(syncFunction);
-expectTypeOf<typeof syncFunction>(memoizedSyncFunction);
-expectTypeOf<boolean>(memoizedSyncFunction('test'));
+expectTypeOf(memoizedSyncFunction).toMatchTypeOf(syncFunction);
+expectTypeOf(memoizedSyncFunction('test')).toMatchTypeOf<boolean>();
 
 /**
  * Test: Async function memoization type preservation
@@ -55,7 +55,7 @@ expectTypeOf<boolean>(memoizedSyncFunction('test'));
  */
 const asyncFunction = async (text: string): Promise<boolean> => Boolean(text);
 
-const memoizedAsyncFunction = memoize(asyncFunction as any);
+const memoizedAsyncFunction = memoize(asyncFunction);
 expectTypeOf(memoizedAsyncFunction).toMatchTypeOf(asyncFunction);
 expectTypeOf(memoizedAsyncFunction('test')).toMatchTypeOf<Promise<boolean>>();
 
@@ -70,7 +70,7 @@ function * generatorFunction(text: string): Generator<boolean, boolean, boolean>
 	return Boolean(text);
 }
 
-const memoizedGeneratorFunction = memoize(generatorFunction as any);
+const memoizedGeneratorFunction = memoize(generatorFunction);
 expectTypeOf(memoizedGeneratorFunction).toMatchTypeOf(generatorFunction);
 expectTypeOf(memoizedGeneratorFunction('test')).toMatchTypeOf<Generator<boolean, boolean, boolean>>();
 
@@ -85,7 +85,7 @@ async function * asyncGeneratorFunction(text: string): AsyncGenerator<boolean, b
 	return Boolean(text);
 }
 
-const memoizedAsyncGeneratorFunction = memoize(asyncGeneratorFunction as any);
+const memoizedAsyncGeneratorFunction = memoize(asyncGeneratorFunction);
 expectTypeOf(memoizedAsyncGeneratorFunction).toMatchTypeOf(asyncGeneratorFunction);
 expectTypeOf(memoizedAsyncGeneratorFunction('test')).toMatchTypeOf<AsyncGenerator<boolean, boolean, boolean>>();
 
@@ -105,7 +105,7 @@ function overloadedFunction(parameter: boolean): boolean {
 	return parameter;
 }
 
-const memoizedOverloadedFunction = memoize(overloadedFunction as any);
+const memoizedOverloadedFunction = memoize(overloadedFunction);
 expectTypeOf(memoizedOverloadedFunction).toMatchTypeOf(overloadedFunction);
 expectTypeOf(memoizedOverloadedFunction(true)).toMatchTypeOf<true>();
 expectTypeOf(memoizedOverloadedFunction(false)).toMatchTypeOf<false>();
@@ -123,7 +123,7 @@ expectTypeOf(memoizedOverloadedFunction(false)).toMatchTypeOf<false>();
 const objectFunction = (parameters: {name: string; age: number}): string =>
 	`${parameters.name} is ${parameters.age} years old`;
 
-const memoizedObjectFunction = memoize(objectFunction as any);
+const memoizedObjectFunction = memoize(objectFunction);
 expectTypeOf(memoizedObjectFunction).toMatchTypeOf(objectFunction);
 expectTypeOf(memoizedObjectFunction({name: 'John', age: 30})).toMatchTypeOf<string>();
 
@@ -135,7 +135,7 @@ expectTypeOf(memoizedObjectFunction({name: 'John', age: 30})).toMatchTypeOf<stri
  */
 const arrayFunction = (items: readonly string[]): number => items.length;
 
-const memoizedArrayFunction = memoize(arrayFunction as any);
+const memoizedArrayFunction = memoize(arrayFunction);
 expectTypeOf(memoizedArrayFunction).toMatchTypeOf(arrayFunction);
 expectTypeOf(memoizedArrayFunction(['a', 'b', 'c'])).toMatchTypeOf<number>();
 
@@ -168,7 +168,7 @@ expectTypeOf<string>(memoizedUnionFunction(42));
 const optionalFunction = (required: string, optional?: number): string =>
 	optional ? `${required}-${optional}` : required;
 
-const memoizedOptionalFunction = memoize(optionalFunction as any);
+const memoizedOptionalFunction = memoize(optionalFunction);
 expectTypeOf(memoizedOptionalFunction).toMatchTypeOf(optionalFunction);
 expectTypeOf(memoizedOptionalFunction('test')).toMatchTypeOf<string>();
 expectTypeOf(memoizedOptionalFunction('test', 42)).toMatchTypeOf<string>();
@@ -186,7 +186,7 @@ expectTypeOf(memoizedOptionalFunction('test', 42)).toMatchTypeOf<string>();
 const restFunction = (first: string, ...rest: number[]): string =>
 	`${first}-${rest.join('-')}`;
 
-const memoizedRestFunction = memoize(restFunction as any);
+const memoizedRestFunction = memoize(restFunction);
 expectTypeOf(memoizedRestFunction).toMatchTypeOf(restFunction);
 expectTypeOf(memoizedRestFunction('test', 1, 2, 3)).toMatchTypeOf<string>();
 
@@ -247,7 +247,7 @@ expectTypeOf<number>(stats.max);
  * Tests that the memoized function preserves its type signature when used as a class property.
  */
 class Calculator {
-	private readonly memoizedAdd = memoize(((a: number, b: number): number => a + b) as any);
+	private readonly memoizedAdd = memoize((a: number, b: number): number => a + b);
 
 	add(a: number, b: number): number {
 		return this.memoizedAdd(a, b);
@@ -264,7 +264,7 @@ expectTypeOf<number>(calculator.add(1, 2));
  * Tests that the generic type constraints are preserved in the memoized function.
  */
 function createMemoizedIdentity<T>(): (value: T) => T {
-	return memoize(((value: T): T => value) as any);
+	return memoize((value: T): T => value);
 }
 
 const stringIdentity = createMemoizedIdentity<string>();
