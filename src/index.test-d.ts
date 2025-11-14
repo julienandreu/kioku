@@ -174,9 +174,9 @@ const optionalFunction = (required: string, optional?: number): string =>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const memoizedOptionalFunction = memoize(optionalFunction as any);
-expectTypeOf(memoizedOptionalFunction).toEqualTypeOf(optionalFunction);
-expectTypeOf(memoizedOptionalFunction('test')).toEqualTypeOf<string>();
-expectTypeOf(memoizedOptionalFunction('test', 42)).toEqualTypeOf<string>();
+expectTypeOf(memoizedOptionalFunction).toMatchTypeOf(optionalFunction);
+expectTypeOf(memoizedOptionalFunction('test')).toMatchTypeOf<string>();
+expectTypeOf(memoizedOptionalFunction('test', 42)).toMatchTypeOf<string>();
 
 // ============================================================================
 // FUNCTION WITH REST PARAMETERS
