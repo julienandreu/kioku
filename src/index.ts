@@ -302,7 +302,8 @@ function serializeArgument(value: unknown): string {
 		}
 
 		case 'object': {
-			return idForObject(value satisfies Record<string, unknown>);
+			// Type assertion needed: object type doesn't have index signature, but we know it's Record<string, unknown>
+			return idForObject(value as Record<string, unknown>);
 		}
 
 		// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
@@ -428,8 +429,8 @@ export function memoize<Func extends MemoizableFunction>(function_: Func): Func 
 			}
 		}
 
-		// Type inference: function_.call returns ReturnType<Func>
-		const result: ReturnType<Func> = function_.call(this, ...arguments_);
+		// Type assertion needed: function_.call returns unknown when called with unknown[] args
+		const result = function_.call(this, ...arguments_) as ReturnType<Func>;
 
 		if (isPromise(result)) {
 			return cachePromiseResult(key, result) as ReturnType<Func>;
