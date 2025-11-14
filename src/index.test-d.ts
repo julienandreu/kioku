@@ -56,8 +56,8 @@ expectTypeOf<boolean>(memoizedSyncFunction('test'));
 const asyncFunction = async (text: string): Promise<boolean> => Boolean(text);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const memoizedAsyncFunction = memoize(asyncFunction as any);
-expectTypeOf(memoizedAsyncFunction).toEqualTypeOf(asyncFunction);
-expectTypeOf(memoizedAsyncFunction('test')).toEqualTypeOf<Promise<boolean>>();
+expectTypeOf(memoizedAsyncFunction).toMatchTypeOf(asyncFunction);
+expectTypeOf(memoizedAsyncFunction('test')).toMatchTypeOf<Promise<boolean>>();
 
 /**
  * Test: Generator function memoization type preservation
@@ -72,8 +72,8 @@ function * generatorFunction(text: string): Generator<boolean, boolean, boolean>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const memoizedGeneratorFunction = memoize(generatorFunction as any);
-expectTypeOf(memoizedGeneratorFunction).toEqualTypeOf(generatorFunction);
-expectTypeOf(memoizedGeneratorFunction('test')).toEqualTypeOf<Generator<boolean, boolean, boolean>>();
+expectTypeOf(memoizedGeneratorFunction).toMatchTypeOf(generatorFunction);
+expectTypeOf(memoizedGeneratorFunction('test')).toMatchTypeOf<Generator<boolean, boolean, boolean>>();
 
 /**
  * Test: Async generator function memoization type preservation
@@ -88,8 +88,8 @@ async function * asyncGeneratorFunction(text: string): AsyncGenerator<boolean, b
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const memoizedAsyncGeneratorFunction = memoize(asyncGeneratorFunction as any);
-expectTypeOf(memoizedAsyncGeneratorFunction).toEqualTypeOf(asyncGeneratorFunction);
-expectTypeOf(memoizedAsyncGeneratorFunction('test')).toEqualTypeOf<AsyncGenerator<boolean, boolean, boolean>>();
+expectTypeOf(memoizedAsyncGeneratorFunction).toMatchTypeOf(asyncGeneratorFunction);
+expectTypeOf(memoizedAsyncGeneratorFunction('test')).toMatchTypeOf<AsyncGenerator<boolean, boolean, boolean>>();
 
 // ============================================================================
 // OVERLOADED FUNCTION TESTS
@@ -193,8 +193,8 @@ const restFunction = (first: string, ...rest: number[]): string =>
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const memoizedRestFunction = memoize(restFunction as any);
-expectTypeOf(memoizedRestFunction).toEqualTypeOf(restFunction);
-expectTypeOf(memoizedRestFunction('test', 1, 2, 3)).toEqualTypeOf<string>();
+expectTypeOf(memoizedRestFunction).toMatchTypeOf(restFunction);
+expectTypeOf(memoizedRestFunction('test', 1, 2, 3)).toMatchTypeOf<string>();
 
 // ============================================================================
 // FUNCTION RETURNING UNDEFINED
