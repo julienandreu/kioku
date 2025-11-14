@@ -354,6 +354,7 @@ function cacheAsyncGeneratorResult<Yield, Return, Next>(
 	return generator;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function copyFunctionMetadata<Func extends (...args: any[]) => any>(target: Func, source: Func): Func {
 	for (const property of Reflect.ownKeys(source)) {
 		if (property === 'length' || property === 'name') {
