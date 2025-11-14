@@ -86,20 +86,24 @@
     "sideEffects": false,
     "type": "module",
     "version": "1.0.1",
-    "xo": [
-        {
-            "files": [
-                "src/test.ts",
-                "src/index.test-d.ts"
-            ],
-            "rules": {
-                "@typescript-eslint/no-unsafe-assignment": "off",
-                "@typescript-eslint/no-unsafe-call": "off",
-                "@typescript-eslint/no-explicit-any": "off",
-                "@typescript-eslint/no-unsafe-return": "off",
-                "@typescript-eslint/ban-types": "off"
-            }
+    "xo": {
+        "rules": {
+            "unicorn/no-immediate-mutation": "off"
         },
+        "overrides": [
+            {
+                "files": [
+                    "src/test.ts",
+                    "src/index.test-d.ts"
+                ],
+                "rules": {
+                    "@typescript-eslint/no-unsafe-assignment": "off",
+                    "@typescript-eslint/no-unsafe-call": "off",
+                    "@typescript-eslint/no-explicit-any": "off",
+                    "@typescript-eslint/no-unsafe-return": "off",
+                    "@typescript-eslint/ban-types": "off"
+                }
+            },
         {
             "files": "benchmark/**",
             "rules": {
@@ -115,17 +119,12 @@
                 "@stylistic/no-mixed-operators": "off"
             }
         },
-        {
-            "files": "src/test.ts",
-            "rules": {
-                "@typescript-eslint/await-thenable": "off"
+            {
+                "files": "src/test.ts",
+                "rules": {
+                    "@typescript-eslint/await-thenable": "off"
+                }
             }
-        },
-        {
-            "files": "src/index.ts",
-            "rules": {
-                "unicorn/no-immediate-mutation": "off"
-            }
-        }
-    ]
+        ]
+    }
 }
