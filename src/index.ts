@@ -354,7 +354,7 @@ function cacheAsyncGeneratorResult<Yield, Return, Next>(
 	return generator;
 }
 
-function copyFunctionMetadata<Func extends MemoizableFunction>(target: Func, source: Func): Func {
+function copyFunctionMetadata<Func extends Function>(target: Func, source: Func): Func {
 	for (const property of Reflect.ownKeys(source)) {
 		if (property === 'length' || property === 'name') {
 			continue;
@@ -451,5 +451,5 @@ export function memoize<Func extends Function>(function_: Func): Func {
 		return cacheSyncResult(key, result);
 	} as Func;
 
-	return copyFunctionMetadata(memoized, function_) as Func;
+	return copyFunctionMetadata(memoized, function_);
 }
