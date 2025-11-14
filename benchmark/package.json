@@ -1,0 +1,19 @@
+{
+	"name": "kioku-benchmark",
+	"version": "1.0.0",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"benchmark": "tsx benchmark.ts"
+	},
+	"dependencies": {
+		"fast-memoize": "^2.5.2",
+		"lru-cache": "^11.0.1",
+		"memoizee": "^0.4.17",
+		"p-memoize": "^8.0.0"
+	},
+	"devDependencies": {
+		"tsx": "^4.20.3"
+	}
+}
+

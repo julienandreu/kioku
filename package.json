@@ -17,21 +17,21 @@
     "bugs": {
         "url": "https://github.com/julienandreu/kioku/issues"
     },
-    "dependencies": {
-        "lru-cache": "^11.1.0",
-        "mimic-function": "^5.0.1"
-    },
     "description": "記憶 (ki-o-ku) = MEMORY in Japanese - Memoize functions and cache results",
     "devDependencies": {
+        "@semantic-release/changelog": "^6.0.3",
+        "@semantic-release/git": "^10.0.1",
+        "@semantic-release/npm": "^13.1.1",
         "@types/node": "^24.0.14",
         "@typescript/native-preview": "^7.0.0-dev.20250715.1",
         "c8": "^10.1.3",
         "expect-type": "^1.2.2",
+        "semantic-release": "^25.0.2",
         "tsx": "^4.20.3",
-        "xo": "^1.1.1"
+        "xo": "^1.2.3"
     },
     "engines": {
-        "node": ">=22"
+        "node": ">=24.11.1"
     },
     "exports": {
         "default": "./dist/index.js",
@@ -71,6 +71,8 @@
         "lint:fix": "xo --fix",
         "prebuild": "rm -rf dist",
         "prepack": "npm run build",
+        "release": "semantic-release",
+        "release:dry": "semantic-release --dry-run",
         "test": "npm run test:code && npm run test:types",
         "test:code": "tsx src/test.ts",
         "test:coverage": "c8 --reporter=text --reporter=lcov --all --include='src/index.ts' tsx src/test.ts",
@@ -85,6 +87,27 @@
             "rules": {
                 "@typescript-eslint/no-unsafe-assignment": "off",
                 "@typescript-eslint/no-unsafe-call": "off"
+            }
+        },
+        {
+            "files": "benchmark/**",
+            "rules": {
+                "@typescript-eslint/no-unsafe-assignment": "off",
+                "@typescript-eslint/no-unsafe-call": "off",
+                "@typescript-eslint/no-unsafe-argument": "off",
+                "@typescript-eslint/no-unsafe-return": "off",
+                "no-await-in-loop": "off",
+                "unicorn/no-array-reduce": "off",
+                "unicorn/prefer-single-call": "off",
+                "unicorn/prefer-top-level-await": "off",
+                "n/prefer-global/process": "off",
+                "@stylistic/no-mixed-operators": "off"
+            }
+        },
+        {
+            "files": "src/test.ts",
+            "rules": {
+                "@typescript-eslint/await-thenable": "off"
             }
         }
     ]

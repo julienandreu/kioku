@@ -7,17 +7,16 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-43853D?logo=node.js&logoColor=white)](https://nodejs.org/)
 
-Kioku is a comprehensive memoization library that supports synchronous functions, asynchronous functions (Promises), generator functions, and async generator functions. It provides configurable caching with LRU eviction and TTL, along with full TypeScript support.
+Kioku is a comprehensive memoization library that supports synchronous functions, asynchronous functions (Promises), generator functions, and async generator functions. It ships with configurable caching (LRU + TTL) implemented without runtime dependencies and embraces strict TypeScript typing throughout the API surface.
 
 ## Features
 
-- 🚀 **High Performance**: Optimized caching with LRU eviction
-- 🔄 **Async Support**: Memoize Promise-returning functions and async generators
-- 🎯 **Generator Support**: Cache generator and async generator functions
-- ⚡ **TypeScript First**: Full type safety with comprehensive TypeScript support
-- 🎛️ **Configurable**: Customizable cache size, TTL, and eviction policies
-- 🧹 **Memory Safe**: Automatic cleanup and memory management
-- 📊 **Observable**: Cache statistics and monitoring capabilities
+- ♻️ **Zero Runtime Dependencies**: Lightweight TypeScript-first implementation
+- 🔐 **Reference-Aware Keys**: Function identity and argument references form stable cache keys
+- 🔄 **Async Ready**: Works with Promises, generators, and async generators out of the box
+- ⚙️ **Configurable**: Tune the LRU size and TTL to suit your workload
+- 🧹 **Self-Managing Cache**: Automatic eviction of expired and least-recently-used entries
+- 📊 **Inspectable**: Query cache statistics for monitoring and debugging
 
 ## Installation
 
@@ -99,6 +98,8 @@ const gen2 = numberGenerator(1, 5); // Returns cached generator
 
 ### Complex Objects and Parameters
 
+Kioku matches arguments by reference. Reuse the same object when you expect a cache hit, or provide your own lightweight key wrapper if you need structural equality.
+
 ```typescript
 import { memoize } from 'kioku';
 
@@ -111,7 +112,10 @@ const user = { id: '123', name: 'John' };
 const options = { verbose: true };
 
 processUser(user, options); // Processing user: John
-processUser(user, options); // Cached result
+processUser(user, options); // Cached result (same object references)
+
+// A different object reference counts as a new cache entry
+processUser({ id: '123', name: 'John' }, options); // Executes again
 ```
 
 ## API Reference
@@ -184,8 +188,8 @@ if (process.memoryUsage().heapUsed > threshold) {
 
 - **Memory Usage**: Cache entries consume memory. Use appropriate `max` values for your use case.
 - **TTL Settings**: Set reasonable TTL values to prevent stale data.
+- **Argument Identity**: Objects are keyed by reference. Wrap calls if you need structural equality.
 - **Function Complexity**: Memoization overhead is minimal for expensive functions.
-- **Parameter Serialization**: Complex objects are serialized for caching, which has a small performance cost.
 
 ## Browser Support
 
@@ -193,6 +197,45 @@ Kioku works in all modern browsers that support:
 - ES2015+ features
 - Promise API
 - Generator functions
+
+## Performance Benchmarks
+
+Kioku has been optimized for performance and compared against other popular memoization libraries ([p-memoize](https://github.com/sindresorhus/p-memoize), [memoizee](https://github.com/medikoo/memoizee), [fast-memoize](https://github.com/caiogondim/fast-memoize.js)).
+
+### Synchronous Function Performance
+
+| Library      | Ops/sec      | Relative Performance |
+|--------------|--------------|---------------------|
+| Vanilla JS   | 8,080,808    | █████████████████████ 100% |
+| memoizee     | 2,057,965    | █████░░░░░░░░░░░░░░░░  25% |
+| **Kioku**    | **1,758,498**| ████░░░░░░░░░░░░░░░░░  22% |
+| fast-memoize | 1,541,523    | ████░░░░░░░░░░░░░░░░░  19% |
+
+### Async Function Performance
+
+| Library      | Ops/sec   | Speedup vs Vanilla | Relative Performance |
+|--------------|-----------|-------------------|---------------------|
+| **Kioku**    | **10,421**| **12.5x**         | █████████████████████ 100% |
+| p-memoize    | 9,599     | 11.5x             | █████████████████░░░░  92% |
+| memoizee     | 9,439     | 11.3x             | █████████████████░░░░  91% |
+| Vanilla JS   | 836       | 1.0x              | ████░░░░░░░░░░░░░░░░░   8% |
+
+### Cache Hit Rate (90% hits)
+
+| Library      | Ops/sec      | Cache Effectiveness |
+|--------------|--------------|---------------------|
+| **Kioku**    | **1,882,502**| **99.0% reduction** |
+| fast-memoize | 867,397      | 99.0% reduction     |
+| memoizee     | 587,400      | 99.0% reduction     |
+
+### Key Highlights
+
+- ⚡ **Async operations**: ~13-14x speedup over vanilla JS
+- 🎯 **Cache effectiveness**: 99% reduction in function calls
+- 💾 **Memory efficient**: Built-in LRU eviction with TTL support
+- 🔄 **Concurrent deduplication**: Excellent promise deduplication (90% reduction)
+
+See [benchmark/RESULTS.md](./benchmark/RESULTS.md) for detailed results.
 
 ## Contributing
 

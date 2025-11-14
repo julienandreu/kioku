@@ -118,10 +118,16 @@ void describe('memoize', () => {
 		const memoized = memoize(function_);
 		strictEqual(memoized(), 0);
 		strictEqual(memoized(), 0);
-		strictEqual(memoized({foo: true}, {bar: false}), 1);
-		strictEqual(memoized({foo: true}, {bar: false}), 1);
-		strictEqual(memoized({foo: true}, {bar: false}, {baz: true}), 2);
-		strictEqual(memoized({foo: true}, {bar: false}, {baz: true}), 2);
+		const objectA = {foo: true};
+		const objectB = {bar: false};
+		const objectC = {baz: true};
+		const objectD = {foo: true};
+		strictEqual(memoized(objectA, objectB), 1);
+		strictEqual(memoized(objectA, objectB), 1);
+		strictEqual(memoized(objectA, objectB, objectC), 2);
+		strictEqual(memoized(objectA, objectB, objectC), 2);
+		strictEqual(memoized(objectD, objectB), 3);
+		strictEqual(memoized(objectD, objectB), 3);
 	});
 
 	/**
@@ -351,8 +357,9 @@ void describe('memoize', () => {
 		strictEqual(memoized(testFunction), 1);
 
 		// Test anonymous functions
-		strictEqual(memoized(() => 'anonymous'), 2);
-		strictEqual(memoized(() => 'anonymous'), 2);
+		const anonymousFunction = () => 'anonymous';
+		strictEqual(memoized(anonymousFunction), 2);
+		strictEqual(memoized(anonymousFunction), 2);
 
 		// Test objects with toStringTag
 		const objectWithTag = {
