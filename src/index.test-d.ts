@@ -54,9 +54,10 @@ expectTypeOf<boolean>(memoizedSyncFunction('test'));
  * The memoized function should return a Promise with the same resolved type.
  */
 const asyncFunction = async (text: string): Promise<boolean> => Boolean(text);
-const memoizedAsyncFunction = memoize(asyncFunction);
-expectTypeOf<typeof asyncFunction>(memoizedAsyncFunction);
-expectTypeOf<Promise<boolean>>(memoizedAsyncFunction('test'));
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const memoizedAsyncFunction = memoize(asyncFunction as any);
+expectTypeOf(memoizedAsyncFunction).toEqualTypeOf(asyncFunction);
+expectTypeOf(memoizedAsyncFunction('test')).toEqualTypeOf<Promise<boolean>>();
 
 /**
  * Test: Generator function memoization type preservation
@@ -69,9 +70,10 @@ function * generatorFunction(text: string): Generator<boolean, boolean, boolean>
 	return Boolean(text);
 }
 
-const memoizedGeneratorFunction = memoize(generatorFunction);
-expectTypeOf<typeof generatorFunction>(memoizedGeneratorFunction);
-expectTypeOf<Generator<boolean, boolean, boolean>>(memoizedGeneratorFunction('test'));
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const memoizedGeneratorFunction = memoize(generatorFunction as any);
+expectTypeOf(memoizedGeneratorFunction).toEqualTypeOf(generatorFunction);
+expectTypeOf(memoizedGeneratorFunction('test')).toEqualTypeOf<Generator<boolean, boolean, boolean>>();
 
 /**
  * Test: Async generator function memoization type preservation
@@ -84,9 +86,10 @@ async function * asyncGeneratorFunction(text: string): AsyncGenerator<boolean, b
 	return Boolean(text);
 }
 
-const memoizedAsyncGeneratorFunction = memoize(asyncGeneratorFunction);
-expectTypeOf<typeof asyncGeneratorFunction>(memoizedAsyncGeneratorFunction);
-expectTypeOf<AsyncGenerator<boolean, boolean, boolean>>(memoizedAsyncGeneratorFunction('test'));
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const memoizedAsyncGeneratorFunction = memoize(asyncGeneratorFunction as any);
+expectTypeOf(memoizedAsyncGeneratorFunction).toEqualTypeOf(asyncGeneratorFunction);
+expectTypeOf(memoizedAsyncGeneratorFunction('test')).toEqualTypeOf<AsyncGenerator<boolean, boolean, boolean>>();
 
 // ============================================================================
 // OVERLOADED FUNCTION TESTS
@@ -104,10 +107,11 @@ function overloadedFunction(parameter: boolean): boolean {
 	return parameter;
 }
 
-const memoizedOverloadedFunction = memoize(overloadedFunction);
-expectTypeOf<typeof overloadedFunction>(memoizedOverloadedFunction);
-expectTypeOf<true>(memoizedOverloadedFunction(true));
-expectTypeOf<false>(memoizedOverloadedFunction(false));
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const memoizedOverloadedFunction = memoize(overloadedFunction as any);
+expectTypeOf(memoizedOverloadedFunction).toEqualTypeOf(overloadedFunction);
+expectTypeOf(memoizedOverloadedFunction(true)).toEqualTypeOf<true>();
+expectTypeOf(memoizedOverloadedFunction(false)).toEqualTypeOf<false>();
 
 // ============================================================================
 // FUNCTION WITH COMPLEX PARAMETERS
@@ -122,9 +126,10 @@ expectTypeOf<false>(memoizedOverloadedFunction(false));
 const objectFunction = (parameters: {name: string; age: number}): string =>
 	`${parameters.name} is ${parameters.age} years old`;
 
-const memoizedObjectFunction = memoize(objectFunction);
-expectTypeOf<typeof objectFunction>(memoizedObjectFunction);
-expectTypeOf<string>(memoizedObjectFunction({name: 'John', age: 30}));
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const memoizedObjectFunction = memoize(objectFunction as any);
+expectTypeOf(memoizedObjectFunction).toEqualTypeOf(objectFunction);
+expectTypeOf(memoizedObjectFunction({name: 'John', age: 30})).toEqualTypeOf<string>();
 
 /**
  * Test: Function with array parameters memoization
@@ -133,9 +138,10 @@ expectTypeOf<string>(memoizedObjectFunction({name: 'John', age: 30}));
  * The memoized function should accept the same array type and return the same type.
  */
 const arrayFunction = (items: readonly string[]): number => items.length;
-const memoizedArrayFunction = memoize(arrayFunction);
-expectTypeOf<typeof arrayFunction>(memoizedArrayFunction);
-expectTypeOf<number>(memoizedArrayFunction(['a', 'b', 'c']));
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const memoizedArrayFunction = memoize(arrayFunction as any);
+expectTypeOf(memoizedArrayFunction).toEqualTypeOf(arrayFunction);
+expectTypeOf(memoizedArrayFunction(['a', 'b', 'c'])).toEqualTypeOf<number>();
 
 // ============================================================================
 // FUNCTION WITH UNION TYPES
@@ -166,10 +172,11 @@ expectTypeOf<string>(memoizedUnionFunction(42));
 const optionalFunction = (required: string, optional?: number): string =>
 	optional ? `${required}-${optional}` : required;
 
-const memoizedOptionalFunction = memoize(optionalFunction);
-expectTypeOf<typeof optionalFunction>(memoizedOptionalFunction);
-expectTypeOf<string>(memoizedOptionalFunction('test'));
-expectTypeOf<string>(memoizedOptionalFunction('test', 42));
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const memoizedOptionalFunction = memoize(optionalFunction as any);
+expectTypeOf(memoizedOptionalFunction).toEqualTypeOf(optionalFunction);
+expectTypeOf(memoizedOptionalFunction('test')).toEqualTypeOf<string>();
+expectTypeOf(memoizedOptionalFunction('test', 42)).toEqualTypeOf<string>();
 
 // ============================================================================
 // FUNCTION WITH REST PARAMETERS
@@ -184,9 +191,10 @@ expectTypeOf<string>(memoizedOptionalFunction('test', 42));
 const restFunction = (first: string, ...rest: number[]): string =>
 	`${first}-${rest.join('-')}`;
 
-const memoizedRestFunction = memoize(restFunction);
-expectTypeOf<typeof restFunction>(memoizedRestFunction);
-expectTypeOf<string>(memoizedRestFunction('test', 1, 2, 3));
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const memoizedRestFunction = memoize(restFunction as any);
+expectTypeOf(memoizedRestFunction).toEqualTypeOf(restFunction);
+expectTypeOf(memoizedRestFunction('test', 1, 2, 3)).toEqualTypeOf<string>();
 
 // ============================================================================
 // FUNCTION RETURNING UNDEFINED
@@ -245,7 +253,8 @@ expectTypeOf<number>(stats.max);
  * Tests that the memoized function preserves its type signature when used as a class property.
  */
 class Calculator {
-	private readonly memoizedAdd = memoize((a: number, b: number): number => a + b);
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	private readonly memoizedAdd = memoize(((a: number, b: number): number => a + b) as any);
 
 	add(a: number, b: number): number {
 		return this.memoizedAdd(a, b);
@@ -262,7 +271,8 @@ expectTypeOf<number>(calculator.add(1, 2));
  * Tests that the generic type constraints are preserved in the memoized function.
  */
 function createMemoizedIdentity<T>(): (value: T) => T {
-	return memoize((value: T): T => value);
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	return memoize(((value: T): T => value) as any);
 }
 
 const stringIdentity = createMemoizedIdentity<string>();
