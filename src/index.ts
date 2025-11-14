@@ -422,6 +422,7 @@ export function memoize<Func extends (...args: any[]) => any>(function_: Func): 
 			switch (cached.kind) {
 				case 'value': {
 					// Type assertion needed: cache stores unknown, but we know it's ReturnType<Func>
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 					return unmarshallUndefined(cached.value) as ReturnType<Func>;
 				}
 
@@ -429,6 +430,7 @@ export function memoize<Func extends (...args: any[]) => any>(function_: Func): 
 				case 'generator':
 				case 'async-generator': {
 					// Type assertion needed: cache stores unknown, but we know it's ReturnType<Func>
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 					return cached.value as ReturnType<Func>;
 				}
 			}
@@ -438,17 +440,21 @@ export function memoize<Func extends (...args: any[]) => any>(function_: Func): 
 		const result = function_.call(this, ...arguments_) as ReturnType<Func>;
 
 		if (isPromise(result)) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 			return cachePromiseResult(key, result) as ReturnType<Func>;
 		}
 
 		if (isAsyncGenerator(result)) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 			return cacheAsyncGeneratorResult(key, result) as ReturnType<Func>;
 		}
 
 		if (isGenerator(result)) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 			return cacheGeneratorResult(key, result) as ReturnType<Func>;
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		return cacheSyncResult(key, result);
 	} as Func;
 
