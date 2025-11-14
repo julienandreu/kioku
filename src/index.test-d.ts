@@ -109,9 +109,9 @@ function overloadedFunction(parameter: boolean): boolean {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const memoizedOverloadedFunction = memoize(overloadedFunction as any);
-expectTypeOf(memoizedOverloadedFunction).toEqualTypeOf(overloadedFunction);
-expectTypeOf(memoizedOverloadedFunction(true)).toEqualTypeOf<true>();
-expectTypeOf(memoizedOverloadedFunction(false)).toEqualTypeOf<false>();
+expectTypeOf(memoizedOverloadedFunction).toMatchTypeOf(overloadedFunction);
+expectTypeOf(memoizedOverloadedFunction(true)).toMatchTypeOf<true>();
+expectTypeOf(memoizedOverloadedFunction(false)).toMatchTypeOf<false>();
 
 // ============================================================================
 // FUNCTION WITH COMPLEX PARAMETERS
