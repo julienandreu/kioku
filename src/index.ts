@@ -252,6 +252,7 @@ function idForSymbol(value: symbol): string {
 
 	const id = `symbol:${nextSymbolId++}:${value.description ?? ''}`;
 	symbolIds.set(value, id);
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 	return id;
 }
 
