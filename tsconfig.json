@@ -30,7 +30,7 @@
         "outDir": "dist",
         "removeComments": false,
         "resolveJsonModule": true,
-        "rootDir": ".",
+        "rootDir": "src",
         "skipLibCheck": true,
         "sourceMap": false,
         "strict": true,

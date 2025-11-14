@@ -25,6 +25,7 @@
         "@types/node": "^24.0.14",
         "@typescript/native-preview": "^7.0.0-dev.20250715.1",
         "c8": "^10.1.3",
+        "eslint-plugin-unicorn": "^62.0.0",
         "expect-type": "^1.2.2",
         "semantic-release": "^25.0.2",
         "tsx": "^4.20.3",
@@ -61,15 +62,19 @@
     ],
     "license": "MIT",
     "name": "kioku",
+    "overrides": {
+        "eslint-plugin-unicorn": "^62.0.0",
+        "@eslint/plugin-kit": "^0.4.1"
+    },
     "repository": {
         "type": "git",
         "url": "git+ssh://git@github.com/julienandreu/kioku.git"
     },
     "scripts": {
-        "build": "tsgo",
+        "build": "tsc --build",
         "lint": "xo",
         "lint:fix": "xo --fix",
-        "prebuild": "rm -rf dist",
+        "prebuild": "rm -rf dist *.tsbuildinfo",
         "prepack": "npm run build",
         "release": "semantic-release",
         "release:dry": "semantic-release --dry-run",
@@ -83,13 +88,17 @@
     "version": "1.0.1",
     "xo": [
         {
-            "files": ["src/test.ts", "src/index.test-d.ts"],
+            "files": [
+                "src/test.ts",
+                "src/index.test-d.ts"
+            ],
             "rules": {
                 "@typescript-eslint/no-unsafe-assignment": "off",
                 "@typescript-eslint/no-unsafe-call": "off",
                 "@typescript-eslint/no-explicit-any": "off",
                 "@typescript-eslint/no-unsafe-return": "off",
-                "@typescript-eslint/ban-types": "off"
+                "@typescript-eslint/ban-types": "off",
+                "unicorn/no-immediate-mutation": "off"
             }
         },
         {
@@ -104,13 +113,21 @@
                 "unicorn/prefer-single-call": "off",
                 "unicorn/prefer-top-level-await": "off",
                 "n/prefer-global/process": "off",
-                "@stylistic/no-mixed-operators": "off"
+                "@stylistic/no-mixed-operators": "off",
+                "unicorn/no-immediate-mutation": "off"
             }
         },
         {
             "files": "src/test.ts",
             "rules": {
-                "@typescript-eslint/await-thenable": "off"
+                "@typescript-eslint/await-thenable": "off",
+                "unicorn/no-immediate-mutation": "off"
+            }
+        },
+        {
+            "files": "src/index.ts",
+            "rules": {
+                "unicorn/no-immediate-mutation": "off"
             }
         }
     ]
