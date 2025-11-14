@@ -168,6 +168,7 @@ class LruCache<K, V> {
 	}
 }
 
+// Accept any function type - TypeScript will preserve the specific function signature
 type MemoizableFunction = (...arguments_: readonly unknown[]) => unknown;
 
 let cache = new LruCache<string, CacheEntry>(defaultOptions);
@@ -401,9 +402,10 @@ export function getCacheStats(): CacheStats {
 	};
 }
 
-export function memoize<Func extends MemoizableFunction>(function_: Func): Func {
+// Accept any function type - TypeScript will preserve the specific function signature
+export function memoize<Func extends (...args: readonly unknown[]) => unknown>(function_: Func): Func {
 	// Cache function ID once per memoized function (Test 1 & 4 optimization)
-	const functionKey = idForFunction(function_);
+	const functionKey = idForFunction(function_ satisfies MemoizableFunction);
 
 	const memoized = function (this: ThisParameterType<Func>, ...arguments_: Parameters<Func>): ReturnType<Func> {
 		// Optimize key creation for common cases (Test 1 optimization)
