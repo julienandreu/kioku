@@ -55,7 +55,6 @@ expectTypeOf<boolean>(memoizedSyncFunction('test'));
  */
 const asyncFunction = async (text: string): Promise<boolean> => Boolean(text);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
 // eslint-disable-next-line -eslint/no-explicit-any, -eslint/no-unsafe-assignment
 const memoizedAsyncFunction = memoize(asyncFunction as any);
 expectTypeOf(memoizedAsyncFunction).toMatchTypeOf(asyncFunction);
@@ -72,7 +71,6 @@ function * generatorFunction(text: string): Generator<boolean, boolean, boolean>
 	return Boolean(text);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
 // eslint-disable-next-line -eslint/no-explicit-any, -eslint/no-unsafe-assignment
 const memoizedGeneratorFunction = memoize(generatorFunction as any);
 expectTypeOf(memoizedGeneratorFunction).toMatchTypeOf(generatorFunction);
@@ -89,7 +87,6 @@ async function * asyncGeneratorFunction(text: string): AsyncGenerator<boolean, b
 	return Boolean(text);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
 // eslint-disable-next-line -eslint/no-explicit-any, -eslint/no-unsafe-assignment
 const memoizedAsyncGeneratorFunction = memoize(asyncGeneratorFunction as any);
 expectTypeOf(memoizedAsyncGeneratorFunction).toMatchTypeOf(asyncGeneratorFunction);
@@ -111,7 +108,6 @@ function overloadedFunction(parameter: boolean): boolean {
 	return parameter;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
 // eslint-disable-next-line -eslint/no-explicit-any, -eslint/no-unsafe-assignment
 const memoizedOverloadedFunction = memoize(overloadedFunction as any);
 expectTypeOf(memoizedOverloadedFunction).toMatchTypeOf(overloadedFunction);
@@ -131,7 +127,6 @@ expectTypeOf(memoizedOverloadedFunction(false)).toMatchTypeOf<false>();
 const objectFunction = (parameters: {name: string; age: number}): string =>
 	`${parameters.name} is ${parameters.age} years old`;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
 // eslint-disable-next-line -eslint/no-explicit-any, -eslint/no-unsafe-assignment
 const memoizedObjectFunction = memoize(objectFunction as any);
 expectTypeOf(memoizedObjectFunction).toMatchTypeOf(objectFunction);
@@ -145,7 +140,6 @@ expectTypeOf(memoizedObjectFunction({name: 'John', age: 30})).toMatchTypeOf<stri
  */
 const arrayFunction = (items: readonly string[]): number => items.length;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
 // eslint-disable-next-line -eslint/no-explicit-any, -eslint/no-unsafe-assignment
 const memoizedArrayFunction = memoize(arrayFunction as any);
 expectTypeOf(memoizedArrayFunction).toMatchTypeOf(arrayFunction);
@@ -180,7 +174,6 @@ expectTypeOf<string>(memoizedUnionFunction(42));
 const optionalFunction = (required: string, optional?: number): string =>
 	optional ? `${required}-${optional}` : required;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
 // eslint-disable-next-line -eslint/no-explicit-any, -eslint/no-unsafe-assignment
 const memoizedOptionalFunction = memoize(optionalFunction as any);
 expectTypeOf(memoizedOptionalFunction).toMatchTypeOf(optionalFunction);
@@ -200,7 +193,6 @@ expectTypeOf(memoizedOptionalFunction('test', 42)).toMatchTypeOf<string>();
 const restFunction = (first: string, ...rest: number[]): string =>
 	`${first}-${rest.join('-')}`;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
 // eslint-disable-next-line -eslint/no-explicit-any, -eslint/no-unsafe-assignment
 const memoizedRestFunction = memoize(restFunction as any);
 expectTypeOf(memoizedRestFunction).toMatchTypeOf(restFunction);
