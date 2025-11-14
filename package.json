@@ -83,10 +83,11 @@
     "version": "1.0.1",
     "xo": [
         {
-            "files": "src/test.ts",
+            "files": ["src/test.ts", "src/index.test-d.ts"],
             "rules": {
                 "@typescript-eslint/no-unsafe-assignment": "off",
-                "@typescript-eslint/no-unsafe-call": "off"
+                "@typescript-eslint/no-unsafe-call": "off",
+                "@typescript-eslint/no-explicit-any": "off"
             }
         },
         {
