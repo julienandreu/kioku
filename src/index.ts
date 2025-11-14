@@ -298,7 +298,8 @@ function serializeArgument(value: unknown): string {
 		}
 
 		case 'function': {
-			return idForFunction(value satisfies MemoizableFunction);
+			// Type assertion needed: Function type doesn't match MemoizableFunction signature
+			return idForFunction(value as MemoizableFunction);
 		}
 
 		case 'object': {
