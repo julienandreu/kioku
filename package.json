@@ -69,7 +69,7 @@
         "build": "tsc --build",
         "lint": "xo",
         "lint:fix": "xo --fix",
-        "prebuild": "rm -rf dist",
+        "prebuild": "rm -rf dist *.tsbuildinfo",
         "prepack": "npm run build",
         "release": "semantic-release",
         "release:dry": "semantic-release --dry-run",
