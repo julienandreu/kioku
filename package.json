@@ -66,7 +66,7 @@
         "url": "git+ssh://git@github.com/julienandreu/kioku.git"
     },
     "scripts": {
-        "build": "tsgo --build",
+        "build": "tsgo --build --noEmit false",
         "lint": "xo",
         "lint:fix": "xo --fix",
         "prebuild": "rm -rf dist",
