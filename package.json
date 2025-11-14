@@ -104,21 +104,21 @@
                     "@typescript-eslint/ban-types": "off"
                 }
             },
-        {
-            "files": "benchmark/**",
-            "rules": {
-                "@typescript-eslint/no-unsafe-assignment": "off",
-                "@typescript-eslint/no-unsafe-call": "off",
-                "@typescript-eslint/no-unsafe-argument": "off",
-                "@typescript-eslint/no-unsafe-return": "off",
-                "no-await-in-loop": "off",
-                "unicorn/no-array-reduce": "off",
-                "unicorn/prefer-single-call": "off",
-                "unicorn/prefer-top-level-await": "off",
-                "n/prefer-global/process": "off",
-                "@stylistic/no-mixed-operators": "off"
-            }
-        },
+            {
+                "files": "benchmark/**",
+                "rules": {
+                    "@typescript-eslint/no-unsafe-assignment": "off",
+                    "@typescript-eslint/no-unsafe-call": "off",
+                    "@typescript-eslint/no-unsafe-argument": "off",
+                    "@typescript-eslint/no-unsafe-return": "off",
+                    "no-await-in-loop": "off",
+                    "unicorn/no-array-reduce": "off",
+                    "unicorn/prefer-single-call": "off",
+                    "unicorn/prefer-top-level-await": "off",
+                    "n/prefer-global/process": "off",
+                    "@stylistic/no-mixed-operators": "off"
+                }
+            },
             {
                 "files": "src/test.ts",
                 "rules": {
